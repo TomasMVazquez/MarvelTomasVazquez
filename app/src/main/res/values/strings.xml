@@ -1,0 +1,34 @@
+<resources>
+    <string name="app_name">Marvel Tomas Vazquez</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    // OnBoarding
+    <string name="iron_man_text">A veces tienes \n que correr \n antes de caminar</string>
+    <string name="hulk_text">Mi secreto es que \n siempre estoy furioso</string>
+    <string name="captain_text">Mi trabajo es mejorar \n el mundo del mañana</string>
+    <string name="btn_next">Siguiente</string>
+    <string name="btn_done">Finalizar</string>
+
+    // Search
+    <string name="search_by_name_hint">Nombre del personaje</string>
+    <string name="search">Buscar</string>
+
+    // Favorite
+    <string name="favorite_hint">Nombre del personaje</string>
+    <string name="favorite_empty_state">Oops... \n Parece que aún no agregaste ningún favorito</string>
+
+    // Content Descriptions
+    <string name="content_description_splash">Imagen de inicio con logo Marvel</string>
+    <string name="content_description_iron">Imagen de inicio de iron man</string>
+    <string name="content_description_hulk">Imagen de inicio de hulk</string>
+    <string name="content_description_captain">Imagen de inicio de capitan america</string>
+    <string name="content_description_character_img">Imagen del personaje</string>
+    <string name="content_description_empty_state">Imagen de estado vacío</string>
+    <string name="content_description_add_favorite">Boton añadir personaje a favoritos</string>
+    <string name="detail_description">\"Descripción: \"</string>
+    <string name="detail_comics">\"Comics: \"</string>
+    <string name="detail_series">\"Series: \"</string>
+    <string name="detail_stories">\"Historias: \"</string>
+    <string name="detail_events">\"Eventos: \"</string>
+</resources>
