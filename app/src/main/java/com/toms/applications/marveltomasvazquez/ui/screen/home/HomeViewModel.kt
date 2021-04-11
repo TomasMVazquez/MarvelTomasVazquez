@@ -64,7 +64,7 @@ class HomeViewModel(private val charactersRepository: CharactersRepository) : Vi
         }
     }
 
-    fun updateModelContent(list: MutableList<Character>?) {
+    fun onCharactersChanged(list: MutableList<Character>?) {
         if (!list.isNullOrEmpty()) _model.value = UiModel.Content(list)
     }
 

@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.widget.doAfterTextChanged
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.NavHostFragment
@@ -19,9 +18,7 @@ import com.toms.applications.marveltomasvazquez.ui.adapters.CharactersRecyclerAd
 import com.toms.applications.marveltomasvazquez.ui.adapters.Listener
 import com.toms.applications.marveltomasvazquez.ui.screen.favorite.FavoriteViewModel.*
 import com.toms.applications.marveltomasvazquez.ui.screen.favorite.FavoriteViewModel.UiModel.*
-import com.toms.applications.marveltomasvazquez.ui.screen.search.SearchViewModel
 import com.toms.applications.marveltomasvazquez.util.getViewModel
-import com.toms.applications.marveltomasvazquez.util.hideKeyboard
 
 
 class FavoriteFragment : Fragment() {
@@ -50,7 +47,7 @@ class FavoriteFragment : Fragment() {
         favoriteViewModel.model.observe(viewLifecycleOwner, ::updateUi)
 
         binding.favoriteEditText.doAfterTextChanged { text: Editable? ->
-            favoriteViewModel.searchCharacter(text)
+            favoriteViewModel.onSearchCharacter(text)
         }
 
         favoriteViewModel.navigation.observe(viewLifecycleOwner){ event ->

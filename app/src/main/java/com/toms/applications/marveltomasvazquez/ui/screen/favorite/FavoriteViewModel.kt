@@ -40,7 +40,7 @@ class FavoriteViewModel(private val favoriteRepository: FavoriteRepository): Vie
         _navigation.value = Event(character)
     }
 
-    fun searchCharacter(value: Editable?) {
+    fun onSearchCharacter(value: Editable?) {
         _model.value = Loading
         launch {
             if (value.isNullOrEmpty()){

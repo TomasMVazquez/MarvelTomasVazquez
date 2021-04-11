@@ -6,13 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.toms.applications.marveltomasvazquez.R
-import com.toms.applications.marveltomasvazquez.database.CharacterDatabase
-import com.toms.applications.marveltomasvazquez.database.RoomDataSource
 import com.toms.applications.marveltomasvazquez.network.*
 import com.toms.applications.marveltomasvazquez.databinding.FragmentHomeBinding
 import com.toms.applications.marveltomasvazquez.repository.CharactersRepository
@@ -56,7 +53,7 @@ class HomeFragment : Fragment() {
             }
         })
 
-        homeViewModel.characters.observe(viewLifecycleOwner) { homeViewModel.updateModelContent(it) }
+        homeViewModel.characters.observe(viewLifecycleOwner) { homeViewModel.onCharactersChanged(it) }
 
         homeViewModel.navigation.observe(viewLifecycleOwner){ event ->
             event.getContentIfNotHandled()?.let {

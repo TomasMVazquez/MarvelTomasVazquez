@@ -15,6 +15,8 @@ import com.toms.applications.marveltomasvazquez.database.RoomDataSource
 import com.toms.applications.marveltomasvazquez.databinding.FragmentDetailBinding
 import com.toms.applications.marveltomasvazquez.domain.Character
 import com.toms.applications.marveltomasvazquez.repository.FavoriteRepository
+import com.toms.applications.marveltomasvazquez.ui.screen.detail.DetailViewModel.*
+import com.toms.applications.marveltomasvazquez.ui.screen.detail.DetailViewModel.UiModel.*
 import com.toms.applications.marveltomasvazquez.util.getViewModel
 
 class DetailFragment : Fragment() {
@@ -50,11 +52,11 @@ class DetailFragment : Fragment() {
         return binding.root
     }
 
-    private fun updateUI(model: DetailViewModel.UiModel?) {
-        if (model == DetailViewModel.UiModel.Loading) binding.loading.visibility = View.VISIBLE else binding.loading.visibility = View.GONE
+    private fun updateUI(model: UiModel?) {
+        if (model == Loading) binding.loading.visibility = View.VISIBLE else binding.loading.visibility = View.GONE
         when(model){
-            DetailViewModel.UiModel.Favorite -> binding.fabFavourite.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.ic_baseline_favorite_24))
-            DetailViewModel.UiModel.NotFavorite -> binding.fabFavourite.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.ic_baseline_favorite_border))
+            Favorite -> binding.fabFavourite.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.ic_baseline_favorite_24))
+            NotFavorite -> binding.fabFavourite.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.ic_baseline_favorite_border))
         }
     }
 
