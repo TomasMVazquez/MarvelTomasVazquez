@@ -26,9 +26,9 @@
     <string name="content_description_character_img">Imagen del personaje</string>
     <string name="content_description_empty_state">Imagen de estado vacío</string>
     <string name="content_description_add_favorite">Boton añadir personaje a favoritos</string>
-    <string name="detail_description">\"Descripción: \"</string>
-    <string name="detail_comics">\"Comics: \"</string>
-    <string name="detail_series">\"Series: \"</string>
-    <string name="detail_stories">\"Historias: \"</string>
-    <string name="detail_events">\"Eventos: \"</string>
+    <string name="detail_description">Descripción: </string>
+    <string name="detail_comics">Comics: </string>
+    <string name="detail_series">Series: </string>
+    <string name="detail_stories">Historias: </string>
+    <string name="detail_events">\"Eventos: </string>
 </resources>

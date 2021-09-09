@@ -9,10 +9,11 @@ import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.applications.toms.data.repository.CharactersRepository
+import com.applications.toms.usecases.GetAllCharacters
 import com.toms.applications.marveltomasvazquez.R
-import com.toms.applications.marveltomasvazquez.network.*
 import com.toms.applications.marveltomasvazquez.databinding.FragmentHomeBinding
-import com.toms.applications.marveltomasvazquez.repository.CharactersRepository
+import com.toms.applications.marveltomasvazquez.data.server.ServerDataSource
 import com.toms.applications.marveltomasvazquez.ui.adapters.CharactersRecyclerAdapter
 import com.toms.applications.marveltomasvazquez.ui.adapters.Listener
 import com.toms.applications.marveltomasvazquez.ui.screen.home.HomeViewModel.UiModel
@@ -20,7 +21,7 @@ import com.toms.applications.marveltomasvazquez.ui.screen.home.HomeViewModel.UiM
 import com.toms.applications.marveltomasvazquez.util.getViewModel
 
 class HomeFragment : Fragment() {
-
+//TODO SAVE LAST ITEM VIEW WHEN RETURN
     private lateinit var binding: FragmentHomeBinding
     private lateinit var homeViewModel: HomeViewModel
 
@@ -34,9 +35,9 @@ class HomeFragment : Fragment() {
     ): View? {
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_home, container, false)
 
-        val charactersRepository = CharactersRepository(Network())
+        val getAllCharacters = GetAllCharacters(CharactersRepository(ServerDataSource()))
 
-        homeViewModel = getViewModel { HomeViewModel(charactersRepository) }
+        homeViewModel = getViewModel { HomeViewModel(getAllCharacters) }
 
         characterAdapter.submitList(emptyList())
 

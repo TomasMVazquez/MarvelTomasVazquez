@@ -9,11 +9,13 @@ import android.view.ViewGroup
 import androidx.core.widget.doAfterTextChanged
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.NavHostFragment
+import com.applications.toms.data.repository.FavoriteRepository
+import com.applications.toms.usecases.GetFavorites
 import com.toms.applications.marveltomasvazquez.R
-import com.toms.applications.marveltomasvazquez.database.CharacterDatabase
-import com.toms.applications.marveltomasvazquez.database.RoomDataSource
+import com.toms.applications.marveltomasvazquez.data.asDomainModel
+import com.toms.applications.marveltomasvazquez.data.database.CharacterDatabase
+import com.toms.applications.marveltomasvazquez.data.database.RoomDataSource
 import com.toms.applications.marveltomasvazquez.databinding.FragmentFavoriteBinding
-import com.toms.applications.marveltomasvazquez.repository.FavoriteRepository
 import com.toms.applications.marveltomasvazquez.ui.adapters.CharactersRecyclerAdapter
 import com.toms.applications.marveltomasvazquez.ui.adapters.Listener
 import com.toms.applications.marveltomasvazquez.ui.screen.favorite.FavoriteViewModel.*
@@ -38,7 +40,7 @@ class FavoriteFragment : Fragment() {
 
         val favoriteRepository = FavoriteRepository(RoomDataSource(CharacterDatabase.getInstance(requireContext())))
 
-        favoriteViewModel = getViewModel { FavoriteViewModel(favoriteRepository) }
+        favoriteViewModel = getViewModel { FavoriteViewModel(GetFavorites(favoriteRepository)) }
 
         favoriteAdapter.submitList(emptyList())
 
@@ -66,12 +68,10 @@ class FavoriteFragment : Fragment() {
                 binding.loading.visibility = View.VISIBLE
             }
             is Content -> {
-                model.characters.observe(viewLifecycleOwner){
-                    it.let {
-                        binding.emtpyState.visibility = if (it.isNullOrEmpty()) View.VISIBLE else View.GONE
-                        favoriteAdapter.submitList(it)
-                        binding.loading.visibility = View.GONE
-                    }
+                model.characters.let{
+                    binding.emtpyState.visibility = if (it.isNullOrEmpty()) View.VISIBLE else View.GONE
+                    favoriteAdapter.submitList(it)
+                    binding.loading.visibility = View.GONE
                 }
             }
         }

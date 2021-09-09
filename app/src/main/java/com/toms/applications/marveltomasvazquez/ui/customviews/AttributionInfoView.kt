@@ -6,7 +6,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.text.bold
 import androidx.core.text.buildSpannedString
 import com.toms.applications.marveltomasvazquez.R
-import com.toms.applications.marveltomasvazquez.domain.Character
+import com.applications.toms.domain.Result as Character
 
 /**
  * Allows to create a view wit all information needed and reduce XML size

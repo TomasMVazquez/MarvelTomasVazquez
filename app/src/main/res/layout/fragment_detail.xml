@@ -9,7 +9,7 @@
             type="com.toms.applications.marveltomasvazquez.ui.screen.detail.DetailViewModel" />
         <variable
             name="character"
-            type="com.toms.applications.marveltomasvazquez.domain.Character" />
+            type="com.toms.applications.marveltomasvazquez.data.database.model.CharacterDatabaseItem" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout

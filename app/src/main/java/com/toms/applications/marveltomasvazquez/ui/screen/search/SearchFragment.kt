@@ -10,10 +10,12 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.NavHostFragment
+import com.applications.toms.data.repository.SearchRepository
 import com.toms.applications.marveltomasvazquez.R
+import com.toms.applications.marveltomasvazquez.data.asDatabaseModel
+import com.toms.applications.marveltomasvazquez.data.asDomainModel
 import com.toms.applications.marveltomasvazquez.databinding.FragmentSearchBinding
-import com.toms.applications.marveltomasvazquez.network.Network
-import com.toms.applications.marveltomasvazquez.repository.SearchRepository
+import com.toms.applications.marveltomasvazquez.data.server.ServerDataSource
 import com.toms.applications.marveltomasvazquez.ui.adapters.CharactersRecyclerAdapter
 import com.toms.applications.marveltomasvazquez.ui.adapters.Listener
 import com.toms.applications.marveltomasvazquez.ui.screen.search.SearchViewModel.*
@@ -26,7 +28,7 @@ class SearchFragment : Fragment() {
     lateinit var searViewModel: SearchViewModel
 
     private val searchAdapter by lazy { CharactersRecyclerAdapter(Listener{
-        searViewModel.onCharacterClicked(it)
+        searViewModel.onCharacterClicked(it.asDomainModel())
     }) }
 
     override fun onCreateView(
@@ -35,7 +37,7 @@ class SearchFragment : Fragment() {
     ): View? {
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_search, container, false)
 
-        val searchRepository = SearchRepository(Network())
+        val searchRepository = SearchRepository(ServerDataSource())
 
         searViewModel = getViewModel { SearchViewModel(searchRepository) }
 
@@ -65,7 +67,7 @@ class SearchFragment : Fragment() {
 
         searViewModel.navigation.observe(viewLifecycleOwner){ event ->
             event.getContentIfNotHandled()?.let {
-                val action = SearchFragmentDirections.actionSearchFragmentToDetailFragment(it)
+                val action = SearchFragmentDirections.actionSearchFragmentToDetailFragment(it.asDatabaseModel())
                 NavHostFragment.findNavController(this).navigate(action)
             }
         }
@@ -80,9 +82,9 @@ class SearchFragment : Fragment() {
                 hideKeyboard()
             }
             is UiModel.Content -> {
-                model.characters.let {
-                    binding.emptyStateImg.visibility = if (it.isEmpty()) View.VISIBLE else View.GONE
-                    searchAdapter.submitList(it)
+                model.characters.let { list ->
+                    binding.emptyStateImg.visibility = if (list.isEmpty()) View.VISIBLE else View.GONE
+                    searchAdapter.submitList(list.map { it.asDatabaseModel() })
                     binding.loading.visibility = View.GONE
                 }
             }

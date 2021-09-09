@@ -3,14 +3,15 @@ package com.toms.applications.marveltomasvazquez.ui.screen.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.toms.applications.marveltomasvazquez.domain.Character
-import com.toms.applications.marveltomasvazquez.network.model.asDomainModel
-import com.toms.applications.marveltomasvazquez.repository.CharactersRepository
+import com.applications.toms.usecases.GetAllCharacters
+import com.toms.applications.marveltomasvazquez.data.asDatabaseModel
+import com.toms.applications.marveltomasvazquez.data.database.model.CharacterDatabaseItem as Character
 import com.toms.applications.marveltomasvazquez.util.*
 import com.toms.applications.marveltomasvazquez.util.Scope.*
 import kotlinx.coroutines.launch
 
-class HomeViewModel(private val charactersRepository: CharactersRepository) : ViewModel(), Scope by ImplementJob() {
+class HomeViewModel(private val getAllCharacters: GetAllCharacters)
+    : ViewModel(), Scope by ImplementJob() {
 
     sealed class UiModel {
         object Loading: UiModel()
@@ -35,8 +36,9 @@ class HomeViewModel(private val charactersRepository: CharactersRepository) : Vi
         initScope()
         _model.value = UiModel.Loading
         launch {
-            charactersRepository.getCharacters(0).data.results.asDomainModel().map {
-                _characters.addNewItem(it)
+            //TODO CONECTION INTERNET
+            getAllCharacters.invoke(0,0).data.results.map {
+                _characters.addNewItem(it.asDatabaseModel())
             }
             _characters.notifyObserver()
         }
@@ -53,12 +55,11 @@ class HomeViewModel(private val charactersRepository: CharactersRepository) : Vi
 
     fun notifyLastVisible(lastVisible: Int) {
         launch {
-            charactersRepository
-                .checkRequireGetMoreCharacters(lastVisible,characters.value?.size ?: 0)
-                ?.data
-                ?.results
-                ?.asDomainModel()?.map {
-                    _characters.addNewItem(it)
+            getAllCharacters.invoke(lastVisible,characters.value?.size ?: 0)
+                .data
+                .results
+                .map {
+                    _characters.addNewItem(it.asDatabaseModel())
                 }
             _characters.notifyObserver()
         }

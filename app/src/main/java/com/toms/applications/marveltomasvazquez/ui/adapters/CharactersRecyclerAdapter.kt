@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.toms.applications.marveltomasvazquez.databinding.RecyclerItemCharacterBinding
-import com.toms.applications.marveltomasvazquez.domain.Character
+import com.toms.applications.marveltomasvazquez.data.database.model.CharacterDatabaseItem as Character
 
 /**
  * To inflate the items into the recycler
@@ -23,7 +23,9 @@ class CharactersRecyclerAdapter (private val clickListener: Listener):
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(item!!,clickListener)
+        item?.let {
+            holder.bind(it,clickListener)
+        }
     }
 
     class ViewHolder private constructor(val binding: RecyclerItemCharacterBinding): RecyclerView.ViewHolder(binding.root){
