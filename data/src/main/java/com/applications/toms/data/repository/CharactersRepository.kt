@@ -1,7 +1,11 @@
 package com.applications.toms.data.repository
 
+import com.applications.toms.data.*
 import com.applications.toms.data.source.RemoteDataSource
 import com.applications.toms.domain.CharactersContainer
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
 
 /**
  * Extended from Interface to be able to replace it if necessary
@@ -9,16 +13,19 @@ import com.applications.toms.domain.CharactersContainer
  */
 class CharactersRepository(private val remoteDataSource: RemoteDataSource) {
 
-    //TODO Change to FLOW
-    suspend fun fetchCharacters(offset: Int): CharactersContainer = remoteDataSource.getCharacters(
-        NETWORK_LIMIT_CHARACTERS, offset)
-
     // If user reach the total items returned then we need to fetch more
-    suspend fun getCharacters(lastVisible: Int, size: Int): CharactersContainer {
-        return if (lastVisible >= size - THRESHOLD_SIZE)
-            fetchCharacters(size)
-        else
-            fetchCharacters(0)
+    suspend fun getCharacters(offset: Int): Flow<Either<CharactersContainer, String>> = flow {
+        fetchCharacters(offset).collect { result ->
+            result.onSuccess { emit(eitherSuccess(it)) }
+            result.onFailure { emit(eitherFailure(it)) }
+        }
+    }
+
+    suspend fun fetchCharacters(offset: Int): Flow<Either<CharactersContainer, String>> = flow {
+        remoteDataSource.getCharacters(NETWORK_LIMIT_CHARACTERS, offset).collect { result ->
+            result.onSuccess { emit(eitherSuccess(it)) }
+            result.onFailure { emit(eitherFailure(it)) }
+        }
     }
 
     companion object{

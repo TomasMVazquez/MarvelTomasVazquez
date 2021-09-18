@@ -6,6 +6,8 @@ import com.applications.toms.domain.Result
 import com.toms.applications.marveltomasvazquez.data.asDatabaseModel
 import com.toms.applications.marveltomasvazquez.data.asDomainModel
 import com.toms.applications.marveltomasvazquez.data.database.model.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class RoomDataSource(db: CharacterDatabase): LocalDataSource {
 
@@ -15,22 +17,15 @@ class RoomDataSource(db: CharacterDatabase): LocalDataSource {
         characterDao.insert(items.asDatabaseModel())
     }
 
-    override fun getCharacters(): List<Result> {
-        return characterDao.getCharacters().map {
-            it.map { characterDatabaseItem ->
-                characterDatabaseItem.asDomainModel()
-            }
-        }.value ?: emptyList()
+    override fun getCharacters(): Flow<List<Result>> {
+        return characterDao.getCharacters().map { characters ->
+            characters.map { it.asDomainModel() } }
     }
 
-    override fun searchCharacters(value: String): List<Result> {
-        return characterDao.searchCharacter(value).map{ list ->
-            list.map { it.asDomainModel() }
-        }.value ?: emptyList()
-    }
-
-    override fun getCharactersList(): List<Result> {
-        return characterDao.getCharactersList().map { it.asDomainModel() }
+    override fun searchCharacters(value: String): Flow<List<Result>> {
+        return characterDao.searchCharacter(value).map { characters ->
+            characters.map { it.asDomainModel() }
+        }
     }
 
     override fun deleteCharacter(id: Long) {

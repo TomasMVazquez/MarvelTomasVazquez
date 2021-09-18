@@ -1,29 +1,30 @@
 package com.toms.applications.marveltomasvazquez.data.server
 
 import com.applications.toms.domain.CharactersContainer
-import retrofit2.http.GET
-import retrofit2.http.Query
+import kotlinx.coroutines.Deferred
+import retrofit2.Response
+import retrofit2.http.*
 
 interface MarvelApi {
 
     @GET("/v1/public/characters")
-    suspend fun getCharacters(
+    fun getCharactersAsync(
         @Query("orderBy")orderBy: String,
         @Query("limit")limit: Int,
         @Query("offset")offset: Int,
         @Query("ts")ts: String,
         @Query("apikey")apiKey: String,
         @Query("hash")hash: String
-    ): CharactersContainer
+    ): Deferred<Response<CharactersContainer>>
 
     @GET("/v1/public/characters")
-    suspend fun getCharactersByNameSearch(
+    fun getCharactersByNameSearchAsync(
         @Query("nameStartsWith")nameStartsWith: String,
         @Query("orderBy")orderBy: String,
         @Query("limit")limit: Int,
         @Query("ts")ts: String,
         @Query("apikey")apiKey: String,
         @Query("hash")hash: String
-    ): CharactersContainer
+    ): Deferred<Response<CharactersContainer>>
 
 }

@@ -1,4 +1,4 @@
-package com.applications.toms.usecases
+package com.applications.toms.usecases.favorites
 
 import com.applications.toms.data.repository.FavoriteRepository
 import com.applications.toms.domain.Result

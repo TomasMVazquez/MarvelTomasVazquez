@@ -1,16 +1,18 @@
 package com.toms.applications.marveltomasvazquez.ui.screen.detail
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.applications.toms.usecases.DeleteFavorite
-import com.applications.toms.usecases.GetFavorites
-import com.applications.toms.usecases.SaveFavorite
+import com.applications.toms.usecases.favorites.DeleteFavorite
+import com.applications.toms.usecases.favorites.GetFavorites
+import com.applications.toms.usecases.favorites.SaveFavorite
+import com.applications.toms.data.onSuccess
 import com.toms.applications.marveltomasvazquez.data.asDatabaseModel
 import com.toms.applications.marveltomasvazquez.data.asDomainModel
 import com.toms.applications.marveltomasvazquez.data.database.model.CharacterDatabaseItem as Character
 import com.toms.applications.marveltomasvazquez.ui.screen.detail.DetailViewModel.UiModel.*
 import com.toms.applications.marveltomasvazquez.util.Scope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class DetailViewModel(private val getFavorites: GetFavorites,
@@ -24,12 +26,8 @@ class DetailViewModel(private val getFavorites: GetFavorites,
         object NotFavorite: UiModel()
     }
 
-    private val _model = MutableLiveData<UiModel>()
-    val model: LiveData<UiModel>
-        get() {
-            if (_model.value == null) _model.value = Loading
-            return _model
-        }
+    private val _model = MutableStateFlow<UiModel>(UiModel.Loading)
+    val model: StateFlow<UiModel> get() = _model
 
     private lateinit var databaseItems: List<Character>
 
@@ -38,9 +36,15 @@ class DetailViewModel(private val getFavorites: GetFavorites,
     init {
         initScope()
         launch {
-            databaseItems = getFavorites.invoke(null).map { it.asDatabaseModel() }
-            favorite = databaseItems.contains(character)
-            _model.value = if(favorite) Favorite else NotFavorite
+            getFavorites.prepare(null).collect { result ->
+                result.onSuccess { flow ->
+                    flow.collect { list ->
+                        databaseItems = list.map { it.asDatabaseModel() }
+                        favorite = databaseItems.contains(character)
+                        _model.value = if(favorite) Favorite else NotFavorite
+                    }
+                }
+            }
         }
     }
 

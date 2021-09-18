@@ -21,20 +21,20 @@ class AttributionInfoView @JvmOverloads constructor(
         text = buildSpannedString {
             if (character.description.isNotEmpty()) {
                 bold { append(context.getString(R.string.detail_description)) }
-                appendLine(character.description)
+                appendLine(" ${character.description}")
                 appendLine()
             }
             bold { append(context.getString(R.string.detail_comics)) }
-            appendLine(character.comics.available.toString())
+            appendLine(" ${character.comics.available}")
             appendLine()
             bold { append(context.getString(R.string.detail_series)) }
-            appendLine(character.series.available.toString())
+            appendLine(" ${character.series.available}")
             appendLine()
             bold { append(context.getString(R.string.detail_stories)) }
-            appendLine(character.stories.available.toString())
+            appendLine(" ${character.stories.available}")
             appendLine()
             bold { append(context.getString(R.string.detail_events)) }
-            appendLine(character.events.available.toString())
+            appendLine(" ${character.events.available}")
             appendLine()
         }
     }

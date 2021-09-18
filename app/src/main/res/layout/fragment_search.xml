@@ -26,12 +26,12 @@
             android:theme="@style/MyDenseOutlined"
             app:boxStrokeWidth="0dp"
             app:boxStrokeWidthFocused="0dp"
-            app:endIconDrawable="@drawable/ic_baseline_search_24"
-            app:endIconMode="custom"
+            app:endIconMode="clear_text"
             app:endIconCheckable="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            >
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/searchEditText"
@@ -43,6 +43,20 @@
                 android:inputType="text"
                 android:maxLines="1" />
         </com.google.android.material.textfield.TextInputLayout>
+
+        <ImageView
+            android:id="@+id/imgSearch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="14dp"
+            app:layout_constraintBottom_toBottomOf="@+id/searchTextInput"
+            app:layout_constraintEnd_toEndOf="@+id/searchTextInput"
+            app:layout_constraintTop_toTopOf="@+id/searchTextInput"
+            app:srcCompat="@drawable/ic_baseline_search_24"
+            app:tint="@color/grey"
+            android:elevation="8dp"
+            android:contentDescription="@string/content_description_search" />
+
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSearch"
@@ -75,18 +89,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btnSearch" />
 
-        <ImageView
-            android:id="@+id/emptyStateImg"
+        <com.toms.applications.marveltomasvazquez.ui.customviews.ItemInfoStateView
+            android:id="@+id/infoState"
             android:layout_width="match_parent"
-            android:layout_height="250dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginEnd="24dp"
-            app:srcCompat="@drawable/ic_emtpy_state"
+            android:layout_height="0dp"
+            android:layout_marginTop="24dp"
             android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnSearch"
-            android:contentDescription="@string/content_description_empty_state" />
+            app:layout_constraintTop_toBottomOf="@+id/btnSearch" />
 
         <ProgressBar
             android:id="@+id/loading"
