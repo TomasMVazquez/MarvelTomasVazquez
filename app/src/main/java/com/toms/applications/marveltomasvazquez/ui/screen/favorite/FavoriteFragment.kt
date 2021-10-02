@@ -10,11 +10,7 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
-import com.applications.toms.data.repository.FavoriteRepository
-import com.applications.toms.usecases.favorites.GetFavorites
 import com.toms.applications.marveltomasvazquez.R
-import com.toms.applications.marveltomasvazquez.data.database.CharacterDatabase
-import com.toms.applications.marveltomasvazquez.data.database.RoomDataSource
 import com.toms.applications.marveltomasvazquez.data.database.model.CharacterDatabaseItem
 import com.toms.applications.marveltomasvazquez.databinding.FragmentFavoriteBinding
 import com.toms.applications.marveltomasvazquez.ui.adapters.CharactersRecyclerAdapter
@@ -22,17 +18,17 @@ import com.toms.applications.marveltomasvazquez.ui.adapters.Listener
 import com.toms.applications.marveltomasvazquez.ui.customviews.InfoState
 import com.toms.applications.marveltomasvazquez.ui.screen.favorite.FavoriteViewModel.*
 import com.toms.applications.marveltomasvazquez.ui.screen.favorite.FavoriteViewModel.UiModel.*
-import com.toms.applications.marveltomasvazquez.ui.screen.home.HomeFragmentDirections
 import com.toms.applications.marveltomasvazquez.util.Event
 import com.toms.applications.marveltomasvazquez.util.collectFlow
-import com.toms.applications.marveltomasvazquez.util.getViewModel
+import org.koin.androidx.scope.ScopeFragment
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class FavoriteFragment : Fragment() {
+class FavoriteFragment : ScopeFragment() {
 
-    lateinit var binding: FragmentFavoriteBinding
+    private lateinit var binding: FragmentFavoriteBinding
 
-    lateinit var favoriteViewModel: FavoriteViewModel
+    private val favoriteViewModel: FavoriteViewModel by viewModel()
 
     private val favoriteAdapter by lazy {
         CharactersRecyclerAdapter(
@@ -45,10 +41,6 @@ class FavoriteFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_favorite, container, false)
-
-        val favoriteRepository = FavoriteRepository(RoomDataSource(CharacterDatabase.getInstance(requireContext())))
-
-        favoriteViewModel = getViewModel { FavoriteViewModel(GetFavorites(favoriteRepository)) }
 
         favoriteAdapter.submitList(emptyList())
 

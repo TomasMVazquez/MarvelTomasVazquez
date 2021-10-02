@@ -8,25 +8,23 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
-import com.applications.toms.data.repository.CharactersRepository
-import com.applications.toms.usecases.characters.GetAllCharacters
 import com.toms.applications.marveltomasvazquez.R
 import com.toms.applications.marveltomasvazquez.data.database.model.CharacterDatabaseItem
 import com.toms.applications.marveltomasvazquez.databinding.FragmentHomeBinding
-import com.toms.applications.marveltomasvazquez.data.server.ServerDataSource
 import com.toms.applications.marveltomasvazquez.ui.adapters.CharactersRecyclerAdapter
 import com.toms.applications.marveltomasvazquez.ui.adapters.Listener
 import com.toms.applications.marveltomasvazquez.ui.screen.home.HomeViewModel.UiModel
 import com.toms.applications.marveltomasvazquez.ui.screen.home.HomeViewModel.UiModel.*
 import com.toms.applications.marveltomasvazquez.util.Event
 import com.toms.applications.marveltomasvazquez.util.collectFlow
-import com.toms.applications.marveltomasvazquez.util.getViewModel
 import com.toms.applications.marveltomasvazquez.util.lastVisibleEvents
+import org.koin.androidx.scope.ScopeFragment
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class HomeFragment : Fragment() {
+class HomeFragment : ScopeFragment() {
 
     private lateinit var binding: FragmentHomeBinding
-    private lateinit var homeViewModel: HomeViewModel
+    private val homeViewModel: HomeViewModel by viewModel()
 
     private val characterAdapter by lazy { CharactersRecyclerAdapter(Listener{
         homeViewModel.onCharacterClicked(it)
@@ -37,10 +35,6 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_home, container, false)
-
-        val getAllCharacters = GetAllCharacters(CharactersRepository(ServerDataSource()))
-
-        homeViewModel = getViewModel { HomeViewModel(getAllCharacters) }
 
         characterAdapter.submitList(emptyList())
 

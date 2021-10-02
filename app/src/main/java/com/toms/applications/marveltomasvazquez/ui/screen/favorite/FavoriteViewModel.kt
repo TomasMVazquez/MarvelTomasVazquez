@@ -4,17 +4,19 @@ import android.text.Editable
 import androidx.lifecycle.*
 import com.applications.toms.usecases.favorites.GetFavorites
 import com.applications.toms.data.onSuccess
+import com.applications.toms.depormas.utils.ScopedViewModel
 import com.toms.applications.marveltomasvazquez.data.asDatabaseModel
 import com.toms.applications.marveltomasvazquez.data.database.model.CharacterDatabaseItem as Character
 import com.toms.applications.marveltomasvazquez.ui.screen.favorite.FavoriteViewModel.UiModel.*
 import com.toms.applications.marveltomasvazquez.util.Event
-import com.toms.applications.marveltomasvazquez.util.Scope
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-class FavoriteViewModel(private val getFavorites: GetFavorites): ViewModel(), Scope by Scope.ImplementJob() {
+class FavoriteViewModel(private val getFavorites: GetFavorites, uiDispatcher: CoroutineDispatcher)
+    : ScopedViewModel(uiDispatcher) {
 
     sealed class UiModel {
         object Loading: UiModel()
@@ -28,7 +30,6 @@ class FavoriteViewModel(private val getFavorites: GetFavorites): ViewModel(), Sc
     val navigation: StateFlow<Event<Character?>> get() = _navigation
 
     init {
-        initScope()
         _model.value = Loading
         launch {
             getFavorites.prepare(null).collect { result ->

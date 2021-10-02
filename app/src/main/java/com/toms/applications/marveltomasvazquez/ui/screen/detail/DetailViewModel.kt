@@ -5,11 +5,12 @@ import com.applications.toms.usecases.favorites.DeleteFavorite
 import com.applications.toms.usecases.favorites.GetFavorites
 import com.applications.toms.usecases.favorites.SaveFavorite
 import com.applications.toms.data.onSuccess
+import com.applications.toms.depormas.utils.ScopedViewModel
 import com.toms.applications.marveltomasvazquez.data.asDatabaseModel
 import com.toms.applications.marveltomasvazquez.data.asDomainModel
 import com.toms.applications.marveltomasvazquez.data.database.model.CharacterDatabaseItem as Character
 import com.toms.applications.marveltomasvazquez.ui.screen.detail.DetailViewModel.UiModel.*
-import com.toms.applications.marveltomasvazquez.util.Scope
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
@@ -18,7 +19,9 @@ import kotlinx.coroutines.launch
 class DetailViewModel(private val getFavorites: GetFavorites,
                       private val saveFavorite: SaveFavorite,
                       private val deleteFavorite: DeleteFavorite,
-                      character: Character): ViewModel(), Scope by Scope.ImplementJob() {
+                      character: Character,
+                      uiDispatcher: CoroutineDispatcher)
+    : ScopedViewModel(uiDispatcher) {
 
     sealed class UiModel{
         object Loading: UiModel()
@@ -34,7 +37,6 @@ class DetailViewModel(private val getFavorites: GetFavorites,
     private var favorite: Boolean = false
 
     init {
-        initScope()
         launch {
             getFavorites.prepare(null).collect { result ->
                 result.onSuccess { flow ->

@@ -8,8 +8,13 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/splash"
+        android:background="@drawable/splash_bkg"
         >
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:srcCompat="@drawable/marvel_logo"
+            android:contentDescription="@string/content_description_splash" />
 
         <TextView
             android:id="@+id/textView"
