@@ -3,43 +3,42 @@ package com.toms.applications.marveltomasvazquez.ui.screen.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.toms.applications.marveltomasvazquez.domain.Character
-import com.toms.applications.marveltomasvazquez.network.model.asDomainModel
-import com.toms.applications.marveltomasvazquez.repository.CharactersRepository
+import com.applications.toms.usecases.characters.GetAllCharacters
+import com.applications.toms.data.onFailure
+import com.applications.toms.data.onSuccess
+import com.toms.applications.marveltomasvazquez.data.asDatabaseModel
+import com.toms.applications.marveltomasvazquez.ui.customviews.InfoState
+import com.toms.applications.marveltomasvazquez.ui.screen.home.HomeViewModel.UiModel.*
+import com.toms.applications.marveltomasvazquez.data.database.model.CharacterDatabaseItem as Character
 import com.toms.applications.marveltomasvazquez.util.*
 import com.toms.applications.marveltomasvazquez.util.Scope.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-class HomeViewModel(private val charactersRepository: CharactersRepository) : ViewModel(), Scope by ImplementJob() {
+class HomeViewModel(private val getAllCharacters: GetAllCharacters)
+    : ViewModel(), Scope by ImplementJob() {
 
     sealed class UiModel {
         object Loading: UiModel()
         class Content(val characters: MutableList<Character>?): UiModel()
+        class ErrorWatcher(val state: InfoState): UiModel()
     }
 
-    private val _model = MutableLiveData<UiModel>()
-    val model: LiveData<UiModel>
-        get() {
-            if (_model.value == null) _model.value = UiModel.Loading
-            return _model
-        }
+    private val _model = MutableStateFlow<UiModel>(Loading)
+    val model: StateFlow<UiModel> get() = _model
 
     private val _characters = MutableLiveData<MutableList<Character>>()
-    val characters: LiveData<MutableList<Character>>
-        get() = _characters
+    val characters: LiveData<MutableList<Character>> get() = _characters
 
-    private val _navigation = MutableLiveData<Event<Character>>()
-    val navigation: LiveData<Event<Character>> get() = _navigation
+    private val _navigation = MutableStateFlow<Event<Character?>>(Event(null))
+    val navigation: StateFlow<Event<Character?>> get() = _navigation
 
     init {
         initScope()
-        _model.value = UiModel.Loading
-        launch {
-            charactersRepository.getCharacters(0).data.results.asDomainModel().map {
-                _characters.addNewItem(it)
-            }
-            _characters.notifyObserver()
-        }
+        _model.value = Loading
+        getCharacterFromUseCase(0)
     }
 
     override fun onCleared() {
@@ -51,21 +50,30 @@ class HomeViewModel(private val charactersRepository: CharactersRepository) : Vi
         _navigation.value = Event(character)
     }
 
-    fun notifyLastVisible(lastVisible: Int) {
+    fun notifyLastVisible(scrolledTo: Int) {
+        characters.value?.let { list ->
+            val size = list.size
+            if (scrolledTo >= (size - getAllCharacters.thresholdSize)){
+                _model.value = Loading
+                getCharacterFromUseCase(size)
+            }
+        }
+    }
+
+    private fun getCharacterFromUseCase(size: Int){
         launch {
-            charactersRepository
-                .checkRequireGetMoreCharacters(lastVisible,characters.value?.size ?: 0)
-                ?.data
-                ?.results
-                ?.asDomainModel()?.map {
-                    _characters.addNewItem(it)
+            getAllCharacters.prepare(GetAllCharacters.OkInput(size)).collect { result ->
+                result.onSuccess { container ->
+                    _characters.addAllItems(container.data.results.map { it.asDatabaseModel() })
+                    _characters.notifyObserver()
                 }
-            _characters.notifyObserver()
+                result.onFailure { _model.value = ErrorWatcher(InfoState.OTHER) }
+            }
         }
     }
 
     fun onCharactersChanged(list: MutableList<Character>?) {
-        if (!list.isNullOrEmpty()) _model.value = UiModel.Content(list)
+        if (!list.isNullOrEmpty()) _model.value = Content(list)
     }
 
 }

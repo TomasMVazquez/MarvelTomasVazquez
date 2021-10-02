@@ -6,7 +6,7 @@
     <data>
         <variable
             name="character"
-            type="com.toms.applications.marveltomasvazquez.domain.Character" />
+            type="com.toms.applications.marveltomasvazquez.data.database.model.CharacterDatabaseItem" />
         <variable
             name="clickListener"
             type="com.toms.applications.marveltomasvazquez.ui.adapters.Listener" />

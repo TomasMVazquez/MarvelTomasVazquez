@@ -1,16 +1,24 @@
 package com.toms.applications.marveltomasvazquez.ui.screen.detail
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.toms.applications.marveltomasvazquez.domain.Character
-import com.toms.applications.marveltomasvazquez.domain.asDatabaseModel
-import com.toms.applications.marveltomasvazquez.repository.FavoriteRepository
+import com.applications.toms.usecases.favorites.DeleteFavorite
+import com.applications.toms.usecases.favorites.GetFavorites
+import com.applications.toms.usecases.favorites.SaveFavorite
+import com.applications.toms.data.onSuccess
+import com.toms.applications.marveltomasvazquez.data.asDatabaseModel
+import com.toms.applications.marveltomasvazquez.data.asDomainModel
+import com.toms.applications.marveltomasvazquez.data.database.model.CharacterDatabaseItem as Character
 import com.toms.applications.marveltomasvazquez.ui.screen.detail.DetailViewModel.UiModel.*
 import com.toms.applications.marveltomasvazquez.util.Scope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-class DetailViewModel(private val favoriteRepository: FavoriteRepository,character: Character): ViewModel(), Scope by Scope.ImplementJob() {
+class DetailViewModel(private val getFavorites: GetFavorites,
+                      private val saveFavorite: SaveFavorite,
+                      private val deleteFavorite: DeleteFavorite,
+                      character: Character): ViewModel(), Scope by Scope.ImplementJob() {
 
     sealed class UiModel{
         object Loading: UiModel()
@@ -18,12 +26,8 @@ class DetailViewModel(private val favoriteRepository: FavoriteRepository,charact
         object NotFavorite: UiModel()
     }
 
-    private val _model = MutableLiveData<UiModel>()
-    val model: LiveData<UiModel>
-        get() {
-            if (_model.value == null) _model.value = Loading
-            return _model
-        }
+    private val _model = MutableStateFlow<UiModel>(UiModel.Loading)
+    val model: StateFlow<UiModel> get() = _model
 
     private lateinit var databaseItems: List<Character>
 
@@ -32,9 +36,15 @@ class DetailViewModel(private val favoriteRepository: FavoriteRepository,charact
     init {
         initScope()
         launch {
-            databaseItems = favoriteRepository.getCharactersList()
-            favorite = databaseItems.contains(character)
-            _model.value = if(favorite) Favorite else NotFavorite
+            getFavorites.prepare(null).collect { result ->
+                result.onSuccess { flow ->
+                    flow.collect { list ->
+                        databaseItems = list.map { it.asDatabaseModel() }
+                        favorite = databaseItems.contains(character)
+                        _model.value = if(favorite) Favorite else NotFavorite
+                    }
+                }
+            }
         }
     }
 
@@ -42,11 +52,11 @@ class DetailViewModel(private val favoriteRepository: FavoriteRepository,charact
         _model.value = Loading
         launch {
             favorite = if (favorite){
-                favoriteRepository.deleteCharacter(character.id.toLong())
+                deleteFavorite.invoke(character.id.toLong())
                 _model.value = NotFavorite
                 false
             }else {
-                favoriteRepository.saveCharacter(character.asDatabaseModel())
+                saveFavorite.invoke(character.asDomainModel())
                 _model.value = Favorite
                 true
             }

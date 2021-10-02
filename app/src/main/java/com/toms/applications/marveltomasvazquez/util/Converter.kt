@@ -2,8 +2,7 @@ package com.toms.applications.marveltomasvazquez.util
 
 import androidx.room.TypeConverter
 import com.google.gson.Gson
-import com.toms.applications.marveltomasvazquez.database.*
-import com.toms.applications.marveltomasvazquez.database.model.*
+import com.toms.applications.marveltomasvazquez.data.database.model.*
 
 /**
  * Allows to save classes into Local database
@@ -39,4 +38,10 @@ class Converter {
 
     @TypeConverter
     fun jsonToStories(value: String): StoriesDatabase = Gson().fromJson(value, StoriesDatabase::class.java)
+
+    @TypeConverter
+    fun urlToJson(value: UrlsDatabase?): String = Gson().toJson(value)
+
+    @TypeConverter
+    fun jsonToUrl(value: String): UrlsDatabase = Gson().fromJson(value, UrlsDatabase::class.java)
 }
