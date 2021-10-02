@@ -1,18 +1,16 @@
-package com.toms.applications.marveltomasvazquez.util
+package com.applications.toms.depormas.utils
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
-
-/**
- * Reduce Boilerplate to use Coroutine
- */
 
 interface Scope : CoroutineScope {
 
+    class ImplementJob(override val uiDispatcher: CoroutineDispatcher): Scope{
+        override lateinit var job: Job
+    }
+
     var job: Job
+    val uiDispatcher: CoroutineDispatcher
 
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
@@ -23,10 +21,6 @@ interface Scope : CoroutineScope {
 
     fun cancelScope(){
         job.cancel()
-    }
-
-    class ImplementJob: Scope{
-        override lateinit var job: Job
     }
 
 }

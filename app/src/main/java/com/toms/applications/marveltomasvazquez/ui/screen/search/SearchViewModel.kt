@@ -5,17 +5,19 @@ import androidx.lifecycle.ViewModel
 import com.applications.toms.data.onFailure
 import com.applications.toms.data.onSuccess
 import com.applications.toms.data.repository.SearchRepository
+import com.applications.toms.depormas.utils.ScopedViewModel
 import com.toms.applications.marveltomasvazquez.ui.customviews.InfoState
 import com.applications.toms.domain.Result as Character
 import com.toms.applications.marveltomasvazquez.ui.screen.search.SearchViewModel.UiModel.*
 import com.toms.applications.marveltomasvazquez.util.Event
-import com.toms.applications.marveltomasvazquez.util.Scope
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-class SearchViewModel(private val searchRepository: SearchRepository): ViewModel(), Scope by Scope.ImplementJob() {
+class SearchViewModel(private val searchRepository: SearchRepository, uiDispatcher: CoroutineDispatcher)
+    : ScopedViewModel(uiDispatcher) {
 
     sealed class UiModel {
         object None: UiModel()
@@ -31,7 +33,6 @@ class SearchViewModel(private val searchRepository: SearchRepository): ViewModel
     val navigation: StateFlow<Event<Character?>> get() = _navigation
 
     init {
-        initScope()
         _model.value = None
     }
 

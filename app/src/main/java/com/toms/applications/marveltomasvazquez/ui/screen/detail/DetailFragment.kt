@@ -23,26 +23,24 @@ import com.toms.applications.marveltomasvazquez.ui.screen.detail.DetailViewModel
 import com.toms.applications.marveltomasvazquez.ui.screen.detail.DetailViewModel.UiModel.*
 import com.toms.applications.marveltomasvazquez.util.collectFlow
 import com.toms.applications.marveltomasvazquez.util.getViewModel
+import org.koin.androidx.scope.ScopeFragment
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
-class DetailFragment : Fragment() {
+class DetailFragment : ScopeFragment() {
 
     private lateinit var binding: FragmentDetailBinding
-    private lateinit var viewModel: DetailViewModel
-
     private val args by navArgs<DetailFragmentArgs>()
+
+    private val viewModel: DetailViewModel by viewModel {
+        parametersOf(args.character)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_detail, container, false)
-
-        val favoriteRepository = FavoriteRepository(RoomDataSource(CharacterDatabase.getInstance(requireContext())))
-
-        viewModel = getViewModel { DetailViewModel(
-            GetFavorites(favoriteRepository),
-            SaveFavorite(favoriteRepository), DeleteFavorite(favoriteRepository),
-            args.character) }
 
         with(binding){
             detailViewModel = detailViewModel

@@ -12,26 +12,24 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
-import com.applications.toms.data.repository.SearchRepository
 import com.toms.applications.marveltomasvazquez.R
 import com.toms.applications.marveltomasvazquez.data.asDatabaseModel
 import com.toms.applications.marveltomasvazquez.data.asDomainModel
 import com.applications.toms.domain.Result as Character
 import com.toms.applications.marveltomasvazquez.databinding.FragmentSearchBinding
-import com.toms.applications.marveltomasvazquez.data.server.ServerDataSource
 import com.toms.applications.marveltomasvazquez.ui.adapters.CharactersRecyclerAdapter
 import com.toms.applications.marveltomasvazquez.ui.adapters.Listener
-import com.toms.applications.marveltomasvazquez.ui.screen.home.HomeFragmentDirections
 import com.toms.applications.marveltomasvazquez.ui.screen.search.SearchViewModel.*
 import com.toms.applications.marveltomasvazquez.util.Event
 import com.toms.applications.marveltomasvazquez.util.collectFlow
-import com.toms.applications.marveltomasvazquez.util.getViewModel
 import com.toms.applications.marveltomasvazquez.util.hideKeyboard
+import org.koin.androidx.scope.ScopeFragment
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchFragment : Fragment() {
+class SearchFragment : ScopeFragment() {
 
-    lateinit var binding: FragmentSearchBinding
-    lateinit var viewModel: SearchViewModel
+    private lateinit var binding: FragmentSearchBinding
+    private val viewModel: SearchViewModel by viewModel()
 
     private val searchAdapter by lazy {
         CharactersRecyclerAdapter(
@@ -44,10 +42,6 @@ class SearchFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_search, container, false)
-
-        val searchRepository = SearchRepository(ServerDataSource())
-
-        viewModel = getViewModel { SearchViewModel(searchRepository) }
 
         searchAdapter.submitList(emptyList())
 
