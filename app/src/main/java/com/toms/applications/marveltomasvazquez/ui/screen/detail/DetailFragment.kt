@@ -43,7 +43,7 @@ class DetailFragment : ScopeFragment() {
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_detail, container, false)
 
         with(binding){
-            detailViewModel = detailViewModel
+            detailViewModel = viewModel
             character = args.character
             characterDetails.setAttributions(args.character.asDomainModel())
             with(toolbar){
