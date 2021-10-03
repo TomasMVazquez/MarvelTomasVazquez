@@ -1,13 +1,13 @@
 package com.applications.toms.usecases.favorites
 
 import com.applications.toms.data.repository.FavoriteRepository
-import com.applications.toms.domain.Result
+import com.applications.toms.domain.MyCharacter
 
-class SaveFavorite(
+class SaveToFavorites(
     private val favoriteRepository: FavoriteRepository
 ) {
 
-    fun invoke(character: Result) {
-        favoriteRepository.saveCharacter(character)
+    fun invoke(character: MyCharacter) {
+        favoriteRepository.addToFavorites(character)
     }
 }

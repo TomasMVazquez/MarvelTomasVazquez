@@ -5,15 +5,15 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.applications.toms.domain.MyCharacter
 import com.toms.applications.marveltomasvazquez.databinding.RecyclerItemCharacterBinding
-import com.toms.applications.marveltomasvazquez.data.database.model.CharacterDatabaseItem as Character
 
 /**
  * To inflate the items into the recycler
  * Adapter used on each recycler (Search, Home and Favorite Fragments)
  */
 class CharactersRecyclerAdapter (private val clickListener: Listener):
-    ListAdapter<Character, CharactersRecyclerAdapter.ViewHolder>(ClassDiffCallback()){
+    ListAdapter<MyCharacter, CharactersRecyclerAdapter.ViewHolder>(ClassDiffCallback()){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder.from(
@@ -30,7 +30,7 @@ class CharactersRecyclerAdapter (private val clickListener: Listener):
 
     class ViewHolder private constructor(val binding: RecyclerItemCharacterBinding): RecyclerView.ViewHolder(binding.root){
 
-        fun bind(item: Character, clickListener: Listener) {
+        fun bind(item: MyCharacter, clickListener: Listener) {
             val res = itemView.context
             binding.clickListener = clickListener
             binding.character = item
@@ -48,18 +48,18 @@ class CharactersRecyclerAdapter (private val clickListener: Listener):
         }
     }
 
-    class ClassDiffCallback : DiffUtil.ItemCallback<Character>() {
-        override fun areItemsTheSame(oldItem: Character, newItem: Character): Boolean {
+    class ClassDiffCallback : DiffUtil.ItemCallback<MyCharacter>() {
+        override fun areItemsTheSame(oldItem: MyCharacter, newItem: MyCharacter): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: Character, newItem: Character): Boolean {
+        override fun areContentsTheSame(oldItem: MyCharacter, newItem: MyCharacter): Boolean {
             return oldItem == newItem
         }
 
     }
 }
 
-class Listener(val clickListener: (character: Character) -> Unit){
-    fun onClick(character: Character) = clickListener(character)
+class Listener(val clickListener: (character: MyCharacter) -> Unit){
+    fun onClick(character: MyCharacter) = clickListener(character)
 }

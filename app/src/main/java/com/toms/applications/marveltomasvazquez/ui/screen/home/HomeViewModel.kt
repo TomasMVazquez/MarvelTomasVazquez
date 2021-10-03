@@ -6,10 +6,9 @@ import com.applications.toms.usecases.characters.GetAllCharacters
 import com.applications.toms.data.onFailure
 import com.applications.toms.data.onSuccess
 import com.applications.toms.depormas.utils.ScopedViewModel
-import com.toms.applications.marveltomasvazquez.data.asDatabaseModel
+import com.applications.toms.domain.MyCharacter
 import com.toms.applications.marveltomasvazquez.ui.customviews.InfoState
 import com.toms.applications.marveltomasvazquez.ui.screen.home.HomeViewModel.UiModel.*
-import com.toms.applications.marveltomasvazquez.data.database.model.CharacterDatabaseItem as Character
 import com.toms.applications.marveltomasvazquez.util.*
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,18 +21,18 @@ class HomeViewModel(private val getAllCharacters: GetAllCharacters, uiDispatcher
 
     sealed class UiModel {
         object Loading: UiModel()
-        class Content(val characters: MutableList<Character>?): UiModel()
+        class Content(val characters: MutableList<MyCharacter>?): UiModel()
         class ErrorWatcher(val state: InfoState): UiModel()
     }
 
     private val _model = MutableStateFlow<UiModel>(Loading)
     val model: StateFlow<UiModel> get() = _model
 
-    private val _characters = MutableLiveData<MutableList<Character>>()
-    val characters: LiveData<MutableList<Character>> get() = _characters
+    private val _characters = MutableLiveData<MutableList<MyCharacter>>()
+    val characters: LiveData<MutableList<MyCharacter>> get() = _characters
 
-    private val _navigation = MutableStateFlow<Event<Character?>>(Event(null))
-    val navigation: StateFlow<Event<Character?>> get() = _navigation
+    private val _navigation = MutableStateFlow<Event<MyCharacter?>>(Event(null))
+    val navigation: StateFlow<Event<MyCharacter?>> get() = _navigation
 
     init {
         _model.value = Loading
@@ -45,7 +44,7 @@ class HomeViewModel(private val getAllCharacters: GetAllCharacters, uiDispatcher
         super.onCleared()
     }
 
-    fun onCharacterClicked(character: Character) {
+    fun onCharacterClicked(character: MyCharacter) {
         _navigation.value = Event(character)
     }
 
@@ -62,8 +61,11 @@ class HomeViewModel(private val getAllCharacters: GetAllCharacters, uiDispatcher
     private fun getCharacterFromUseCase(size: Int){
         launch {
             getAllCharacters.prepare(GetAllCharacters.OkInput(size)).collect { result ->
-                result.onSuccess { container ->
-                    _characters.addAllItems(container.data.results.map { it.asDatabaseModel() })
+                result.onSuccess { list ->
+                    if (size > 0)
+                        _characters.addNewItemsAt(size,list)
+                    else
+                        _characters.addAllItems(list)
                     _characters.notifyObserver()
                 }
                 result.onFailure { _model.value = ErrorWatcher(InfoState.OTHER) }
@@ -71,7 +73,7 @@ class HomeViewModel(private val getAllCharacters: GetAllCharacters, uiDispatcher
         }
     }
 
-    fun onCharactersChanged(list: MutableList<Character>?) {
+    fun onCharactersChanged(list: MutableList<MyCharacter>?) {
         if (!list.isNullOrEmpty()) _model.value = Content(list)
     }
 

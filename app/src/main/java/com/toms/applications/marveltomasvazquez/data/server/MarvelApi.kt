@@ -1,6 +1,6 @@
 package com.toms.applications.marveltomasvazquez.data.server
 
-import com.applications.toms.domain.CharactersContainer
+import com.toms.applications.marveltomasvazquez.data.server.model.CharactersContainer
 import kotlinx.coroutines.Deferred
 import retrofit2.Response
 import retrofit2.http.*

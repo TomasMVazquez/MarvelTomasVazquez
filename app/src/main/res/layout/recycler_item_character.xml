@@ -6,7 +6,7 @@
     <data>
         <variable
             name="character"
-            type="com.toms.applications.marveltomasvazquez.data.database.model.CharacterDatabaseItem" />
+            type="com.applications.toms.domain.MyCharacter" />
         <variable
             name="clickListener"
             type="com.toms.applications.marveltomasvazquez.ui.adapters.Listener" />
@@ -42,7 +42,7 @@
                     android:scaleType="centerCrop"
                     android:contentDescription="@string/content_description_character_img"
                     app:ratio="1.5"
-                    imageUrl="@{character.getUrlThumbnail()}"
+                    imageUrl="@{character.thumbnail}"
                     tools:srcCompat="@tools:sample/avatars"
                     />
 

@@ -83,6 +83,12 @@ fun <T> MutableLiveData<MutableList<T>>.addAllItems(items: List<T>) {
     this.value = oldValue
 }
 
+fun <T> MutableLiveData<MutableList<T>>.addNewItemsAt(index: Int, items: List<T>) {
+    val oldValue = this.value ?: mutableListOf()
+    oldValue.addAll(index, items.subList(index, items.lastIndex))
+    this.value = oldValue
+}
+
 /**
  * To be able to filter LiveData
  */

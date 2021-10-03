@@ -1,4 +1,4 @@
-package com.applications.toms.domain
+package com.toms.applications.marveltomasvazquez.data.server.model
 
 data class Events(
     val available: Int,

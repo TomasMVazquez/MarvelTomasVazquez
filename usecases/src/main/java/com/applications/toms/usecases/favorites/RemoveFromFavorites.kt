@@ -1,12 +1,13 @@
 package com.applications.toms.usecases.favorites
 
 import com.applications.toms.data.repository.FavoriteRepository
+import com.applications.toms.domain.MyCharacter
 
-class DeleteFavorite (
+class RemoveFromFavorites (
     private val favoriteRepository: FavoriteRepository
 ) {
 
-    fun invoke(characterId: Long) {
-        favoriteRepository.deleteCharacter(characterId)
+    fun invoke(character: MyCharacter) {
+        favoriteRepository.removeFromFavorites(character)
     }
 }

@@ -9,7 +9,7 @@
             type="com.toms.applications.marveltomasvazquez.ui.screen.detail.DetailViewModel" />
         <variable
             name="character"
-            type="com.toms.applications.marveltomasvazquez.data.database.model.CharacterDatabaseItem" />
+            type="com.applications.toms.domain.MyCharacter" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -38,7 +38,7 @@
                     android:scaleType="centerCrop"
                     app:layout_collapseMode="parallax"
                     app:ratio="0.8"
-                    imageUrl="@{character.getUrlThumbnail()}"
+                    imageUrl="@{character.thumbnail}"
                     android:foreground="@drawable/background_gradiant_overlay"
                     />
 

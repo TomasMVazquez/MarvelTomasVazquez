@@ -6,8 +6,8 @@ import com.applications.toms.data.onFailure
 import com.applications.toms.data.onSuccess
 import com.applications.toms.data.repository.SearchRepository
 import com.applications.toms.depormas.utils.ScopedViewModel
+import com.applications.toms.domain.MyCharacter
 import com.toms.applications.marveltomasvazquez.ui.customviews.InfoState
-import com.applications.toms.domain.Result as Character
 import com.toms.applications.marveltomasvazquez.ui.screen.search.SearchViewModel.UiModel.*
 import com.toms.applications.marveltomasvazquez.util.Event
 import kotlinx.coroutines.CoroutineDispatcher
@@ -22,15 +22,15 @@ class SearchViewModel(private val searchRepository: SearchRepository, uiDispatch
     sealed class UiModel {
         object None: UiModel()
         object Loading: UiModel()
-        class Content(val characters: List<Character>): UiModel()
+        class Content(val characters: List<MyCharacter>): UiModel()
         class ErrorWatcher(val infoState: InfoState): UiModel()
     }
 
     private val _model = MutableStateFlow<UiModel>(Loading)
     val model: StateFlow<UiModel> get() = _model
 
-    private val _navigation = MutableStateFlow<Event<Character?>>(Event(null))
-    val navigation: StateFlow<Event<Character?>> get() = _navigation
+    private val _navigation = MutableStateFlow<Event<MyCharacter?>>(Event(null))
+    val navigation: StateFlow<Event<MyCharacter?>> get() = _navigation
 
     init {
         _model.value = None
@@ -41,10 +41,10 @@ class SearchViewModel(private val searchRepository: SearchRepository, uiDispatch
         launch {
             searchRepository.getCharacters(value.toString()).collect { result ->
                 result.onSuccess {
-                    if (it.data.results.isEmpty())
+                    if (it.isEmpty())
                         _model.value = ErrorWatcher(InfoState.SEARCH_EMPTY)
                     else
-                        _model.value = Content(it.data.results)
+                        _model.value = Content(it)
                 }
                 result.onFailure {
                     _model.value = ErrorWatcher(InfoState.OTHER)
@@ -53,7 +53,7 @@ class SearchViewModel(private val searchRepository: SearchRepository, uiDispatch
         }
     }
 
-    fun onCharacterClicked(character: Character) {
+    fun onCharacterClicked(character: MyCharacter) {
         _navigation.value = Event(character)
     }
 

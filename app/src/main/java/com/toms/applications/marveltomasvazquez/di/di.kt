@@ -6,13 +6,13 @@ import com.applications.toms.data.repository.FavoriteRepository
 import com.applications.toms.data.repository.SearchRepository
 import com.applications.toms.data.source.LocalDataSource
 import com.applications.toms.data.source.RemoteDataSource
+import com.applications.toms.domain.MyCharacter
 import com.applications.toms.usecases.characters.GetAllCharacters
-import com.applications.toms.usecases.favorites.DeleteFavorite
+import com.applications.toms.usecases.favorites.RemoveFromFavorites
 import com.applications.toms.usecases.favorites.GetFavorites
-import com.applications.toms.usecases.favorites.SaveFavorite
+import com.applications.toms.usecases.favorites.SaveToFavorites
 import com.toms.applications.marveltomasvazquez.data.database.CharacterDatabase
 import com.toms.applications.marveltomasvazquez.data.database.RoomDataSource
-import com.toms.applications.marveltomasvazquez.data.database.model.CharacterDatabaseItem
 import com.toms.applications.marveltomasvazquez.data.server.ServerDataSource
 import com.toms.applications.marveltomasvazquez.ui.screen.detail.DetailFragment
 import com.toms.applications.marveltomasvazquez.ui.screen.detail.DetailViewModel
@@ -50,7 +50,7 @@ private val appModule = module {
 }
 
 private val dataModule = module {
-    factory { CharactersRepository(get()) }
+    factory { CharactersRepository(get(),get()) }
     factory { FavoriteRepository(get()) }
     factory { SearchRepository(get()) }
 }
@@ -67,10 +67,10 @@ private val scopesModule = module {
     }
 
     scope(named<DetailFragment>()) {
-        viewModel { (character: CharacterDatabaseItem) -> DetailViewModel(get(),get(),get(),character,get()) }
+        viewModel { (character: MyCharacter) -> DetailViewModel(get(),get(),get(),character,get()) }
         scoped { GetFavorites(get()) }
-        scoped { SaveFavorite(get()) }
-        scoped { DeleteFavorite(get()) }
+        scoped { SaveToFavorites(get()) }
+        scoped { RemoveFromFavorites(get()) }
     }
 
     scope(named<SearchFragment>()) {

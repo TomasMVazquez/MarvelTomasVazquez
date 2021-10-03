@@ -1,7 +1,7 @@
 package com.applications.toms.data.repository
 
 import com.applications.toms.data.source.LocalDataSource
-import com.applications.toms.domain.Result
+import com.applications.toms.domain.MyCharacter
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -10,18 +10,16 @@ import kotlinx.coroutines.flow.Flow
  */
 class FavoriteRepository(private val localDataSource: LocalDataSource) {
 
-    fun getCharacters(): Flow<List<Result>> = localDataSource.getCharacters()
+    fun getCharacters(): Flow<List<MyCharacter>> = localDataSource.getMyFavoritesCharacters()
     
-    fun searchCharacters(value: String): Flow<List<Result>> = localDataSource.searchCharacters(value)
+    fun searchCharacters(value: String): Flow<List<MyCharacter>> = localDataSource.searchCharacters(value)
 
-//    fun getCharactersList(): List<Result> = localDataSource.getCharactersList()
-
-    fun saveCharacter(character: Result){
-        localDataSource.saveCharacter(character)
+    fun addToFavorites(character: MyCharacter){
+        localDataSource.addFavorite(character)
     }
 
-    fun deleteCharacter(id: Long){
-        localDataSource.deleteCharacter(id)
+    fun removeFromFavorites(character: MyCharacter){
+        localDataSource.removeFavorite(character)
     }
 
 }

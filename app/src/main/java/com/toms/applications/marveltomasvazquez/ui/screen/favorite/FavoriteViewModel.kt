@@ -1,12 +1,11 @@
 package com.toms.applications.marveltomasvazquez.ui.screen.favorite
 
 import android.text.Editable
-import androidx.lifecycle.*
 import com.applications.toms.usecases.favorites.GetFavorites
 import com.applications.toms.data.onSuccess
 import com.applications.toms.depormas.utils.ScopedViewModel
+import com.applications.toms.domain.MyCharacter
 import com.toms.applications.marveltomasvazquez.data.asDatabaseModel
-import com.toms.applications.marveltomasvazquez.data.database.model.CharacterDatabaseItem as Character
 import com.toms.applications.marveltomasvazquez.ui.screen.favorite.FavoriteViewModel.UiModel.*
 import com.toms.applications.marveltomasvazquez.util.Event
 import kotlinx.coroutines.CoroutineDispatcher
@@ -20,14 +19,14 @@ class FavoriteViewModel(private val getFavorites: GetFavorites, uiDispatcher: Co
 
     sealed class UiModel {
         object Loading: UiModel()
-        class Content(val characters: List<Character>): UiModel()
+        class Content(val characters: List<MyCharacter>): UiModel()
     }
 
     private val _model = MutableStateFlow<UiModel>(Loading)
     val model: StateFlow<UiModel> get() = _model
 
-    private val _navigation = MutableStateFlow<Event<Character?>>(Event(null))
-    val navigation: StateFlow<Event<Character?>> get() = _navigation
+    private val _navigation = MutableStateFlow<Event<MyCharacter?>>(Event(null))
+    val navigation: StateFlow<Event<MyCharacter?>> get() = _navigation
 
     init {
         _model.value = Loading
@@ -35,7 +34,7 @@ class FavoriteViewModel(private val getFavorites: GetFavorites, uiDispatcher: Co
             getFavorites.prepare(null).collect { result ->
                 result.onSuccess { flow ->
                     flow.collect { list ->
-                        _model.value = Content(list.map{it.asDatabaseModel()})
+                        _model.value = Content(list)
                     }
                 }
             }
@@ -47,7 +46,7 @@ class FavoriteViewModel(private val getFavorites: GetFavorites, uiDispatcher: Co
         super.onCleared()
     }
 
-    fun onCharacterClicked(character: Character) {
+    fun onCharacterClicked(character: MyCharacter) {
         _navigation.value = Event(character)
     }
 
@@ -57,7 +56,7 @@ class FavoriteViewModel(private val getFavorites: GetFavorites, uiDispatcher: Co
             getFavorites.prepare(value.toString()).collect { result ->
                 result.onSuccess { flow ->
                     flow.collect { list ->
-                        _model.value = Content(list.map{it.asDatabaseModel()})
+                        _model.value = Content(list)
                     }
                 }
             }

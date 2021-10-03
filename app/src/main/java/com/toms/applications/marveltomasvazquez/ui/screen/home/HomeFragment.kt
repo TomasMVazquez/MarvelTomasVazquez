@@ -8,7 +8,10 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
+import androidx.recyclerview.widget.RecyclerView
+import com.applications.toms.domain.MyCharacter
 import com.toms.applications.marveltomasvazquez.R
+import com.toms.applications.marveltomasvazquez.data.asDatabaseModel
 import com.toms.applications.marveltomasvazquez.data.database.model.CharacterDatabaseItem
 import com.toms.applications.marveltomasvazquez.databinding.FragmentHomeBinding
 import com.toms.applications.marveltomasvazquez.ui.adapters.CharactersRecyclerAdapter
@@ -47,17 +50,16 @@ class HomeFragment : ScopeFragment() {
         homeViewModel.characters.observe(viewLifecycleOwner) { homeViewModel.onCharactersChanged(it) }
 
         lifecycleScope.collectFlow(binding.charactersRecycler.lastVisibleEvents) {
-            //TODO SAVE LAST ITEM VIEW WHEN RETURN
             homeViewModel.notifyLastVisible(it)
         }
 
         return binding.root
     }
 
-    private fun navigateToCharacterDetail(event: Event<CharacterDatabaseItem?>) {
+    private fun navigateToCharacterDetail(event: Event<MyCharacter?>) {
         event.getContentIfNotHandled()?.let {
             NavHostFragment.findNavController(this).navigate(
-                HomeFragmentDirections.actionHomeFragmentToDetailFragment(it)
+                HomeFragmentDirections.actionHomeFragmentToDetailFragment(it.asDatabaseModel())
             )
         }
     }

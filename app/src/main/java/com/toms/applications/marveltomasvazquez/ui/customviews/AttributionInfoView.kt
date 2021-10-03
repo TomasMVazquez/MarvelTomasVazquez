@@ -5,8 +5,8 @@ import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.text.bold
 import androidx.core.text.buildSpannedString
+import com.applications.toms.domain.MyCharacter
 import com.toms.applications.marveltomasvazquez.R
-import com.applications.toms.domain.Result as Character
 
 /**
  * Allows to create a view wit all information needed and reduce XML size
@@ -17,7 +17,7 @@ class AttributionInfoView @JvmOverloads constructor(
         defStyleAttr: Int = 0
 ): AppCompatTextView(context,attrs,defStyleAttr) {
 
-    fun setAttributions(character: Character){
+    fun setAttributions(character: MyCharacter){
         text = buildSpannedString {
             if (character.description.isNotEmpty()) {
                 bold { append(context.getString(R.string.detail_description)) }
@@ -25,16 +25,16 @@ class AttributionInfoView @JvmOverloads constructor(
                 appendLine()
             }
             bold { append(context.getString(R.string.detail_comics)) }
-            appendLine(" ${character.comics.available}")
+            appendLine(" ${character.comics}")
             appendLine()
             bold { append(context.getString(R.string.detail_series)) }
-            appendLine(" ${character.series.available}")
+            appendLine(" ${character.series}")
             appendLine()
             bold { append(context.getString(R.string.detail_stories)) }
-            appendLine(" ${character.stories.available}")
+            appendLine(" ${character.stories}")
             appendLine()
             bold { append(context.getString(R.string.detail_events)) }
-            appendLine(" ${character.events.available}")
+            appendLine(" ${character.events}")
             appendLine()
         }
     }

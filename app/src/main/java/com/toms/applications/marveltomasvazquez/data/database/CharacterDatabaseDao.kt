@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface CharacterDatabaseDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(vararg items: CharacterDatabaseItem)
 
     @Query("SELECT * FROM marvel_characters_table ORDER BY name")
@@ -18,4 +18,11 @@ interface CharacterDatabaseDao {
 
     @Query("DELETE FROM marvel_characters_table WHERE id = :id")
     fun deleteCharacter(id: Long)
+
+    @Query("SELECT COUNT(id) FROM  marvel_characters_table")
+    fun charactersCount(): Int
+
+    @Query("UPDATE marvel_characters_table SET isFavorite = :favorite WHERE marvelId = :marvelId")
+    fun changeCharacterFavorite(favorite: Boolean, marvelId: Int)
+
 }

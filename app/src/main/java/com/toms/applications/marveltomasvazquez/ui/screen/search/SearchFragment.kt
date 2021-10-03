@@ -3,7 +3,6 @@ package com.toms.applications.marveltomasvazquez.ui.screen.search
 import android.os.Bundle
 import android.text.Editable
 import android.view.KeyEvent
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,10 +11,9 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
+import com.applications.toms.domain.MyCharacter
 import com.toms.applications.marveltomasvazquez.R
 import com.toms.applications.marveltomasvazquez.data.asDatabaseModel
-import com.toms.applications.marveltomasvazquez.data.asDomainModel
-import com.applications.toms.domain.Result as Character
 import com.toms.applications.marveltomasvazquez.databinding.FragmentSearchBinding
 import com.toms.applications.marveltomasvazquez.ui.adapters.CharactersRecyclerAdapter
 import com.toms.applications.marveltomasvazquez.ui.adapters.Listener
@@ -33,7 +31,7 @@ class SearchFragment : ScopeFragment() {
 
     private val searchAdapter by lazy {
         CharactersRecyclerAdapter(
-            Listener{ viewModel.onCharacterClicked(it.asDomainModel()) }
+            Listener{ viewModel.onCharacterClicked(it) }
         )
     }
 
@@ -75,7 +73,7 @@ class SearchFragment : ScopeFragment() {
         return binding.root
     }
 
-    private fun navigateToCharacterDetail(event: Event<Character?>) {
+    private fun navigateToCharacterDetail(event: Event<MyCharacter?>) {
         event.getContentIfNotHandled()?.let {
             NavHostFragment.findNavController(this).navigate(
                 SearchFragmentDirections.actionSearchFragmentToDetailFragment(it.asDatabaseModel())
@@ -93,7 +91,7 @@ class SearchFragment : ScopeFragment() {
                 model.characters.let { list ->
                     binding.infoState.visibility = View.GONE
                     binding.searchRecycler.visibility = View.VISIBLE
-                    searchAdapter.submitList(list.map { it.asDatabaseModel() })
+                    searchAdapter.submitList(list)
                     binding.loading.visibility = View.GONE
                 }
             }
