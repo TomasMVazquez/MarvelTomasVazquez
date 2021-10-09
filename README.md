@@ -4,6 +4,7 @@
 
 Aplicación, con listado de los personajes de Marvel, desarrollada sobre Android nativo:
 - en Kotlin:
+- Clean Architecture y principios SOLID.
 - con POO.
 - con el concepto MVVM.
 - y utilizando:

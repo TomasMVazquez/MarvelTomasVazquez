@@ -1,7 +1,5 @@
 <resources>
     <string name="app_name">Marvel Tomas Vazquez</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
     // OnBoarding
     <string name="iron_man_text">A veces tienes \n que correr \n antes de caminar</string>
@@ -16,7 +14,12 @@
 
     // Favorite
     <string name="favorite_hint">Nombre del personaje</string>
-    <string name="favorite_empty_state">Oops... \n Parece que aún no agregaste ningún favorito</string>
+
+    // Info States
+    <string name="empty_state">Oops... \n Parece que aún no agregaste ningún favorito</string>
+    <string name="search_emtpy">Oops... \n Parece que no encontramos ningún personaje</string>
+    <string name="conection_error">Oops... \n Parece que no tienes buena conexión</string>
+    <string name="other">Oops... \n Parece que algo salió mal</string>
 
     // Content Descriptions
     <string name="content_description_splash">Imagen de inicio con logo Marvel</string>
@@ -25,10 +28,11 @@
     <string name="content_description_captain">Imagen de inicio de capitan america</string>
     <string name="content_description_character_img">Imagen del personaje</string>
     <string name="content_description_empty_state">Imagen de estado vacío</string>
+    <string name="content_description_search">Imagen lupa</string>
     <string name="content_description_add_favorite">Boton añadir personaje a favoritos</string>
-    <string name="detail_description">\"Descripción: \"</string>
-    <string name="detail_comics">\"Comics: \"</string>
-    <string name="detail_series">\"Series: \"</string>
-    <string name="detail_stories">\"Historias: \"</string>
-    <string name="detail_events">\"Eventos: \"</string>
+    <string name="detail_description">Descripción: </string>
+    <string name="detail_comics">Comics: </string>
+    <string name="detail_series">Series: </string>
+    <string name="detail_stories">Historias: </string>
+    <string name="detail_events">Eventos: </string>
 </resources>

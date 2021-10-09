@@ -8,4 +8,11 @@
     <color name="orange">#f78f3f</color>
     <color name="orange_thin">#80F78F3F</color>
     <color name="grey">#B1B1B1</color>
+
+    <color name="overlay_end">#001A1A1A</color>
+    <color name="overlay_center">#001A1A1A</color>
+    <color name="overlay_start">#CC1A1A1A</color>
+
+    <color name="eerie_black">#1A1A1A</color>
+    <color name="seal_brown">#161312</color>
 </resources>

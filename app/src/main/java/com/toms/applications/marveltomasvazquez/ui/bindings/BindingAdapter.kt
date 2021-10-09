@@ -6,7 +6,6 @@ import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.toms.applications.marveltomasvazquez.R
-import com.toms.applications.marveltomasvazquez.network.model.Thumbnail
 
 /**
  * To bind and set image from network into the view

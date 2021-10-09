@@ -1,28 +1,30 @@
 package com.toms.applications.marveltomasvazquez.ui.screen.home
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.applications.toms.domain.MyCharacter
 import com.toms.applications.marveltomasvazquez.R
-import com.toms.applications.marveltomasvazquez.network.*
+import com.toms.applications.marveltomasvazquez.data.asDatabaseModel
 import com.toms.applications.marveltomasvazquez.databinding.FragmentHomeBinding
-import com.toms.applications.marveltomasvazquez.repository.CharactersRepository
 import com.toms.applications.marveltomasvazquez.ui.adapters.CharactersRecyclerAdapter
 import com.toms.applications.marveltomasvazquez.ui.adapters.Listener
 import com.toms.applications.marveltomasvazquez.ui.screen.home.HomeViewModel.UiModel
 import com.toms.applications.marveltomasvazquez.ui.screen.home.HomeViewModel.UiModel.*
-import com.toms.applications.marveltomasvazquez.util.getViewModel
+import com.toms.applications.marveltomasvazquez.util.Event
+import com.toms.applications.marveltomasvazquez.util.collectFlow
+import com.toms.applications.marveltomasvazquez.util.lastVisibleEvents
+import org.koin.androidx.scope.ScopeFragment
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class HomeFragment : Fragment() {
+class HomeFragment : ScopeFragment() {
 
     private lateinit var binding: FragmentHomeBinding
-    private lateinit var homeViewModel: HomeViewModel
+    private val homeViewModel: HomeViewModel by viewModel()
 
     private val characterAdapter by lazy { CharactersRecyclerAdapter(Listener{
         homeViewModel.onCharacterClicked(it)
@@ -34,47 +36,56 @@ class HomeFragment : Fragment() {
     ): View? {
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_home, container, false)
 
-        val charactersRepository = CharactersRepository(Network())
-
-        homeViewModel = getViewModel { HomeViewModel(charactersRepository) }
-
         characterAdapter.submitList(emptyList())
 
         binding.charactersRecycler.adapter = characterAdapter
 
-        homeViewModel.model.observe(viewLifecycleOwner, ::updateUi)
+        lifecycleScope.collectFlow(homeViewModel.model, ::updateUi)
 
-        // To call Network Characters when we are reaching the end of last updated list
-        val layoutManager = binding.charactersRecycler.layoutManager as GridLayoutManager
-
-        binding.charactersRecycler.addOnScrollListener(object : RecyclerView.OnScrollListener(){
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-               homeViewModel.notifyLastVisible(layoutManager.findLastVisibleItemPosition())
-            }
-        })
+        lifecycleScope.collectFlow(homeViewModel.navigation, ::navigateToCharacterDetail)
 
         homeViewModel.characters.observe(viewLifecycleOwner) { homeViewModel.onCharactersChanged(it) }
 
-        homeViewModel.navigation.observe(viewLifecycleOwner){ event ->
-            event.getContentIfNotHandled()?.let {
-                val action = HomeFragmentDirections.actionHomeFragmentToDetailFragment(it)
-                NavHostFragment.findNavController(this).navigate(action)
-            }
+        lifecycleScope.collectFlow(binding.charactersRecycler.lastVisibleEvents) {
+            homeViewModel.notifyLastVisible(it)
         }
 
         return binding.root
     }
 
+    private fun navigateToCharacterDetail(event: Event<MyCharacter?>) {
+        event.getContentIfNotHandled()?.let {
+            NavHostFragment.findNavController(this).navigate(
+                HomeFragmentDirections.actionHomeFragmentToDetailFragment(it.asDatabaseModel())
+            )
+        }
+    }
+
     private fun updateUi(model: UiModel){
         when (model){
-            is Loading ->  binding.progress.visibility = View.VISIBLE
+            is Loading ->  onShowLoading(true)
             is Content -> {
                 model.characters?.let {
                     characterAdapter.submitList(it)
-                    binding.progress.visibility = View.GONE
+                    onShowInfoState(false)
                 }
             }
+            is ErrorWatcher -> {
+                onShowInfoState(true)
+                binding.infoState.setInfoState(model.state)
+            }
         }
+    }
+
+    private fun onShowLoading(show: Boolean){
+        binding.charactersRecycler.suppressLayout(show)
+        binding.progress.visibility = if (show) View.VISIBLE else View.GONE
+    }
+
+    private fun onShowInfoState(show: Boolean){
+        onShowLoading(false)
+        binding.charactersRecycler.visibility = if (show) View.GONE else View.VISIBLE
+        binding.infoState.visibility = if (show) View.VISIBLE else View.GONE
     }
 
     companion object {

@@ -25,7 +25,7 @@
         tools:layout="@layout/fragment_detail" >
         <argument
             android:name="character"
-            app:argType="com.toms.applications.marveltomasvazquez.domain.Character" />
+            app:argType="com.toms.applications.marveltomasvazquez.data.database.model.CharacterDatabaseItem" />
     </fragment>
     <fragment
         android:id="@+id/splashFragment"
@@ -35,10 +35,6 @@
         <action
             android:id="@+id/action_splashFragment_to_homeFragment"
             app:destination="@id/homeFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"
             app:popUpTo="@id/splashFragment"
             app:popUpToInclusive="true" />
         <action

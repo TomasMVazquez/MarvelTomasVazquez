@@ -9,6 +9,17 @@
         android:layout_height="match_parent"
         android:background="@color/brown">
 
+        <com.toms.applications.marveltomasvazquez.ui.customviews.ItemInfoStateView
+            android:id="@+id/infoState"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="24dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/charactersRecycler"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/charactersRecycler" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/charactersRecycler"
             android:layout_width="match_parent"

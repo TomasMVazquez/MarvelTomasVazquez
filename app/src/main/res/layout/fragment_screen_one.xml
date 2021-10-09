@@ -5,11 +5,19 @@
     tools:context=".ui.screen.onboarding.ScreenOneFragment">
 
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.constraintlayout.motion.widget.MotionLayout
+        android:id="@+id/splashOneConstraint"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/splash"
-        >
+        android:background="@drawable/splash_bkg"
+        app:layoutDescription="@xml/fragment_screen_one_scene">
+
+        <ImageView
+            android:id="@+id/background"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/content_description_splash"
+            app:srcCompat="@drawable/marvel_logo" />
 
         <TextView
             android:id="@+id/textView"
@@ -18,26 +26,27 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="24dp"
             android:layout_marginEnd="16dp"
-            android:alpha="0.8"
-            android:background="@color/white"
+            android:background="@drawable/background_80_black"
             android:fontFamily="@font/marvel_bold"
             android:gravity="center"
             android:text="@string/hulk_text"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
+            android:textSize="36sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
+            android:id="@+id/hulkImg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/content_description_hulk"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/hulk"
-            android:contentDescription="@string/content_description_hulk"/>
+            app:srcCompat="@drawable/hulk" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnNext"
@@ -45,12 +54,12 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
-            android:text="@string/btn_next"
             android:fontFamily="@font/marvel_bold"
+            android:text="@string/btn_next"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.motion.widget.MotionLayout>
 
 
 </layout>

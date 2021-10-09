@@ -4,6 +4,11 @@ import android.app.Activity
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.*
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.*
 import java.math.BigInteger
 import java.security.MessageDigest
 
@@ -15,7 +20,6 @@ fun String.md5Hash(): String {
     return BigInteger(1, md.digest(toByteArray())).toString(16).padStart(32, '0')
 }
 
-
 /**
  * Reduce Boilerplate when creating view models
  */
@@ -26,6 +30,14 @@ inline fun <reified T: ViewModel> Fragment.getViewModel(crossinline factory: () 
     }
 
     return ViewModelProvider(this,vmFactory).get(T::class.java)
+}
+
+/**
+ * Reduce Boilerplate when collecting flows
+ */
+fun <T> CoroutineScope.collectFlow(flow: Flow<T>, body: suspend (T) -> Unit) {
+    flow.onEach { body(it) }
+        .launchIn(this)
 }
 
 /**
@@ -65,6 +77,18 @@ fun <T> MutableLiveData<MutableList<T>>.removeItemAt(index: Int) {
     }
 }
 
+fun <T> MutableLiveData<MutableList<T>>.addAllItems(items: List<T>) {
+    val oldValue = this.value ?: mutableListOf()
+    oldValue.addAll(items)
+    this.value = oldValue
+}
+
+fun <T> MutableLiveData<MutableList<T>>.addNewItemsAt(index: Int, items: List<T>) {
+    val oldValue = this.value ?: mutableListOf()
+    oldValue.addAll(index, items.subList(index, items.lastIndex))
+    this.value = oldValue
+}
+
 /**
  * To be able to filter LiveData
  */
@@ -77,3 +101,19 @@ inline fun <T> LiveData<T>.filter(crossinline filter: (T?) -> Boolean): LiveData
         }
     }
 }
+
+/**
+ * Reduce Boilerplate when scrolling recycler
+ */
+val RecyclerView.lastVisibleEvents: Flow<Int>
+    get() = callbackFlow<Int> {
+        val lm = layoutManager as GridLayoutManager
+
+        val listener = object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                offer(lm.findLastVisibleItemPosition())
+            }
+        }
+        addOnScrollListener(listener)
+        awaitClose { removeOnScrollListener(listener) }
+    }.conflate()

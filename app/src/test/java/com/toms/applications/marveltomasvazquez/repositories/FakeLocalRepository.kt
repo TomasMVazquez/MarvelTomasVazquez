@@ -3,9 +3,8 @@ package com.toms.applications.marveltomasvazquez.repositories
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
-import com.toms.applications.marveltomasvazquez.database.model.CharacterDatabaseItem
-import com.toms.applications.marveltomasvazquez.database.model.asDomainModel
-import com.toms.applications.marveltomasvazquez.domain.Character
+import com.toms.applications.marveltomasvazquez.data.database.model.CharacterDatabaseItem
+import com.toms.applications.marveltomasvazquez.data.database.model.asDomainModel
 import com.toms.applications.marveltomasvazquez.repository.LocalDataSource
 
 class FakeLocalRepository(
