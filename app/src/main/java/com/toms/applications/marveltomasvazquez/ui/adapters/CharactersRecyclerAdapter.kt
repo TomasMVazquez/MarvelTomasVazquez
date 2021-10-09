@@ -21,6 +21,16 @@ class CharactersRecyclerAdapter (private val clickListener: Listener):
         )
     }
 
+    override fun onViewAttachedToWindow(holder: ViewHolder) {
+        super.onViewAttachedToWindow(holder)
+        holder.startAnimation()
+    }
+
+    override fun onViewDetachedFromWindow(holder: ViewHolder) {
+        super.onViewDetachedFromWindow(holder)
+        holder.clearAnimation()
+    }
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
         item?.let {
@@ -30,11 +40,21 @@ class CharactersRecyclerAdapter (private val clickListener: Listener):
 
     class ViewHolder private constructor(val binding: RecyclerItemCharacterBinding): RecyclerView.ViewHolder(binding.root){
 
-        fun bind(item: MyCharacter, clickListener: Listener) {
+        fun bind(item: MyCharacter, listener: Listener) {
             val res = itemView.context
-            binding.clickListener = clickListener
-            binding.character = item
-            binding.executePendingBindings()
+            with(binding){
+                clickListener = listener
+                character = item
+                executePendingBindings()
+            }
+        }
+
+        fun startAnimation(){
+            binding.constraintLayout.transitionToEnd()
+        }
+
+        fun clearAnimation(){
+            binding.constraintLayout.progress = 0F
         }
 
         companion object {

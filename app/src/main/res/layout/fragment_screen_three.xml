@@ -4,13 +4,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.screen.onboarding.ScreenThreeFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.constraintlayout.motion.widget.MotionLayout
+        android:id="@+id/scene"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/blue"
-        >
+        app:layoutDescription="@xml/fragment_screen_three_scene">
 
         <TextView
+            android:id="@+id/phrase"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -21,19 +23,21 @@
             android:text="@string/captain_text"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="@color/white"
+            android:textSize="36sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
+            android:id="@+id/img"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/content_description_captain"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/capitan_america"
-            android:contentDescription="@string/content_description_captain" />
+            app:srcCompat="@drawable/capitan_america" />
 
 
         <com.google.android.material.button.MaterialButton
@@ -42,11 +46,11 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
-            android:text="@string/btn_done"
             android:fontFamily="@font/marvel_bold"
+            android:text="@string/btn_done"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.motion.widget.MotionLayout>
 
 </layout>

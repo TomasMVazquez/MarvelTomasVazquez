@@ -62,11 +62,17 @@ class HomeViewModel(private val getAllCharacters: GetAllCharacters, uiDispatcher
         launch {
             getAllCharacters.prepare(GetAllCharacters.OkInput(size)).collect { result ->
                 result.onSuccess { list ->
-                    if (size > 0)
+                    list.asSequence().iterator().forEach {
+                        if (size > 0)
+                            _characters.addNewItemAt(size,it)
+                        else
+                            _characters.addNewItem(it)
+                        _characters.notifyObserver()
+                    }
+                    /*if (size > 0)
                         _characters.addNewItemsAt(size,list)
                     else
-                        _characters.addAllItems(list)
-                    _characters.notifyObserver()
+                        _characters.addAllItems(list)*/
                 }
                 result.onFailure { _model.value = ErrorWatcher(InfoState.OTHER) }
             }

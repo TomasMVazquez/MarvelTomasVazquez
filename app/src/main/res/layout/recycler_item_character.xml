@@ -12,57 +12,67 @@
             type="com.toms.applications.marveltomasvazquez.ui.adapters.Listener" />
     </data>
 
-    <com.google.android.material.card.MaterialCardView
+    <androidx.constraintlayout.motion.widget.MotionLayout
+        android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:background="@color/brown"
-        app:cardCornerRadius="17dp"
-        app:cardBackgroundColor="@color/black"
-        android:onClick="@{() -> clickListener.onClick(character)}"
-        >
+        app:layoutDescription="@xml/recycler_item_scene">
 
-        <LinearLayout
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/materialCardView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_margin="1dp">
+            android:layout_height="match_parent"
+            android:background="@color/brown"
+            android:onClick="@{() -> clickListener.onClick(character)}"
+            app:cardBackgroundColor="@color/black"
+            app:cardCornerRadius="17dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <com.google.android.material.card.MaterialCardView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="17dp"
-                app:cardElevation="8dp"
-                >
+                android:layout_margin="1dp"
+                android:orientation="vertical">
 
-                <com.toms.applications.marveltomasvazquez.ui.customviews.AspectRatioImageView
-                    android:id="@+id/characterImg"
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    android:contentDescription="@string/content_description_character_img"
-                    app:ratio="1.5"
-                    imageUrl="@{character.thumbnail}"
-                    tools:srcCompat="@tools:sample/avatars"
-                    />
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="17dp"
+                    app:cardElevation="8dp">
 
-            </com.google.android.material.card.MaterialCardView>
+                    <com.toms.applications.marveltomasvazquez.ui.customviews.AspectRatioImageView
+                        android:id="@+id/characterImg"
+                        imageUrl="@{character.thumbnail}"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:contentDescription="@string/content_description_character_img"
+                        android:scaleType="centerCrop"
+                        app:ratio="1.5"
+                        tools:srcCompat="@tools:sample/avatars" />
 
-            <TextView
-                android:id="@+id/characterName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:fontFamily="@font/marvel_bold"
-                android:gravity="center|center_vertical"
-                android:padding="2dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="@color/white"
-                android:text="@{character.name}"
-                tools:text="Name" />
-        </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
 
+                <TextView
+                    android:id="@+id/characterName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:fontFamily="@font/marvel_bold"
+                    android:gravity="center|center_vertical"
+                    android:padding="2dp"
+                    android:text="@{character.name}"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/white"
+                    tools:text="Name" />
+            </LinearLayout>
 
-    </com.google.android.material.card.MaterialCardView>
+        </com.google.android.material.card.MaterialCardView>
+
+    </androidx.constraintlayout.motion.widget.MotionLayout>
+
 
 </layout>

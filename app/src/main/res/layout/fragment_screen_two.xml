@@ -4,11 +4,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.screen.onboarding.ScreenTwoFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.constraintlayout.motion.widget.MotionLayout
+        android:id="@+id/screenTwoConstraint"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/background_gradiant_overlay_eerie"
-        >
+        app:layoutDescription="@xml/fragment_screen_two_scene">
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/animationView"
@@ -22,7 +23,7 @@
             app:lottie_speed="2" />
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/phrase"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -30,6 +31,7 @@
             android:layout_marginEnd="16dp"
             android:fontFamily="@font/marvel_bold"
             android:gravity="center"
+            android:textSize="36sp"
             android:text="@string/iron_man_text"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="@color/white"
@@ -43,11 +45,11 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
-            android:text="@string/btn_next"
             android:fontFamily="@font/marvel_bold"
+            android:text="@string/btn_next"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.motion.widget.MotionLayout>
 
 </layout>
