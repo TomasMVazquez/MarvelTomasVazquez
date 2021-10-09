@@ -16,6 +16,7 @@ Aplicación, con listado de los personajes de Marvel, desarrollada sobre Android
   - Librería *Glide* para la carga de imagenes.
   - ROOM para la BD local.
   - Retrofit para la conexión API REST de [Marvel](https://developer.marvel.com/docs).
+  - Motion Layout
   - Unit Tests.
 ***
 ## Detalle de la Aplicación
