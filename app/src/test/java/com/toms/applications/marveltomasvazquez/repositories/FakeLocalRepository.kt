@@ -1,42 +1,50 @@
 package com.toms.applications.marveltomasvazquez.repositories
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.map
+import com.applications.toms.data.source.LocalDataSource
+import com.applications.toms.domain.MyCharacter
+import com.toms.applications.marveltomasvazquez.data.asDatabaseModel
+import com.toms.applications.marveltomasvazquez.data.asDomainModel
 import com.toms.applications.marveltomasvazquez.data.database.model.CharacterDatabaseItem
-import com.toms.applications.marveltomasvazquez.data.database.model.asDomainModel
-import com.toms.applications.marveltomasvazquez.repository.LocalDataSource
+import kotlinx.coroutines.flow.*
 
-class FakeLocalRepository(
-    private var _characters: MutableLiveData<List<CharacterDatabaseItem>> = MutableLiveData<List<CharacterDatabaseItem>>()
-): LocalDataSource {
+class FakeLocalRepository(): LocalDataSource {
 
-    private val characters: LiveData<List<CharacterDatabaseItem>> get() = _characters
+    private var characters: List<CharacterDatabaseItem> = emptyList()
 
-    override suspend fun saveCharacters(vararg items: CharacterDatabaseItem) {
-        items.map {
-            _characters.value?.toMutableList()?.add(it)
-        }
+    override fun saveCharacter(items: List<MyCharacter>) {
+        characters = items.map { it.asDatabaseModel() }
     }
 
-    override suspend fun getCharacters(): LiveData<List<Character>> {
-        return characters.map { it.asDomainModel() }
+    override fun getCharacters(): Flow<List<MyCharacter>> = flow {
+        characters.map { it.asDomainModel() }
     }
 
-    override suspend fun searchCharacters(value: String): LiveData<List<Character>> {
-        return characters.map { characters ->
-            characters.filter { character ->
-                character.name.contains(value)
-            }
-        }.map { it.asDomainModel() }
+    override fun getMyFavoritesCharacters(): Flow<List<MyCharacter>>  = flow {
+        characters.filter { it.isFavorite }.map { it.asDomainModel() }
     }
 
-    override suspend fun getCharactersList(): List<Character> {
-        return characters.value?.asDomainModel() ?: emptyList()
+    override fun searchCharacters(value: String): Flow<List<MyCharacter>> {
+        TODO("Not yet implemented")
     }
 
-    override suspend fun deleteCharacter(id: Long) {
-        val characterToDelete = characters.value?.find { it.id == id.toInt() } ?: return
-        _characters.value?.toMutableList()?.remove(characterToDelete)
+    override fun deleteCharacter(id: Long) {
+        TODO("Not yet implemented")
     }
+
+    override fun isEmpty(): Boolean = characters.count() <= 0
+
+    override fun getNumberSaved(): Int {
+        TODO("Not yet implemented")
+    }
+
+    override fun addFavorite(favorite: MyCharacter) {
+        val myFavorite = favorite.asDatabaseModel().copy(isFavorite = true)
+        characters.map { if (it.marvelId == myFavorite.marvelId) it.isFavorite = true }
+    }
+
+    override fun removeFavorite(favorite: MyCharacter) {
+        val myFavorite = favorite.asDatabaseModel().copy(isFavorite = true)
+        characters.map { if (it.marvelId == myFavorite.marvelId) it.isFavorite = false }
+    }
+
 }
