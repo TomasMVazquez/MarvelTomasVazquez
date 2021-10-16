@@ -3,3 +3,5 @@ rootProject.name = "Marvel Tomas Vazquez"
 include ':data'
 include ':usecases'
 include ':domain'
+include ':testShared'
+include ':testShared'

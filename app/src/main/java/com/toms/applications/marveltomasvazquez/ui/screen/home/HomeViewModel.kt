@@ -69,10 +69,6 @@ class HomeViewModel(private val getAllCharacters: GetAllCharacters, uiDispatcher
                             _characters.addNewItem(it)
                         _characters.notifyObserver()
                     }
-                    /*if (size > 0)
-                        _characters.addNewItemsAt(size,list)
-                    else
-                        _characters.addAllItems(list)*/
                 }
                 result.onFailure { _model.value = ErrorWatcher(InfoState.OTHER) }
             }

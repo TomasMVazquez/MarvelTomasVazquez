@@ -1,16 +1,18 @@
 package com.toms.applications.marveltomasvazquez
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Observer
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.toms.applications.marveltomasvazquez.domain.*
+import app.cash.turbine.test
+import com.applications.toms.data.repository.FavoriteRepository
+import com.applications.toms.testshared.listOfMocks
+import com.applications.toms.testshared.mockCharacter
+import com.applications.toms.usecases.favorites.GetFavorites
+import com.applications.toms.usecases.favorites.RemoveFromFavorites
+import com.applications.toms.usecases.favorites.SaveToFavorites
 import com.toms.applications.marveltomasvazquez.repositories.FakeLocalRepository
-import com.toms.applications.marveltomasvazquez.repository.FavoriteRepository
 import com.toms.applications.marveltomasvazquez.rules.CoroutineTestRule
 import com.toms.applications.marveltomasvazquez.ui.screen.detail.DetailViewModel
-import com.toms.applications.marveltomasvazquez.ui.screen.detail.DetailViewModel.UiModel
 import com.toms.applications.marveltomasvazquez.ui.screen.detail.DetailViewModel.UiModel.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.ObsoleteCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
@@ -18,7 +20,10 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import kotlin.test.assertEquals
+import kotlin.time.ExperimentalTime
 
+@ExperimentalTime
 @ObsoleteCoroutinesApi
 @ExperimentalCoroutinesApi
 class DetailFragmentTest {
@@ -26,19 +31,11 @@ class DetailFragmentTest {
     private lateinit var detailViewModel: DetailViewModel
     private val fakeLocalRepository = FakeLocalRepository()
     private val favoriteRepository = FavoriteRepository(fakeLocalRepository)
+    private val getFavoriteRepository = GetFavorites(favoriteRepository)
+    private val saveFavorites = SaveToFavorites(favoriteRepository)
+    private val removeFavorite = RemoveFromFavorites(favoriteRepository)
 
-    private val character = Character(
-        1,
-        "",
-        "",
-        Thumbnail("",""),
-        Comics(0, emptyList<ComicItem>()),
-        Events(0, emptyList<EventItem>()),
-        Series(0, emptyList<SerieItem>()),
-        Stories(0, emptyList<StoryItem>())
-    )
 
-    // To allow the correct execution of test with LiveData
     @get:Rule
     val rule = InstantTaskExecutorRule()
 
@@ -47,7 +44,8 @@ class DetailFragmentTest {
 
     @Before
     fun setUp(){
-        detailViewModel = DetailViewModel(favoriteRepository,character)
+        detailViewModel = DetailViewModel(getFavoriteRepository,saveFavorites,removeFavorite,
+            mockCharacter,Dispatchers.Unconfined)
     }
 
     @After
@@ -57,21 +55,21 @@ class DetailFragmentTest {
 
     @Test
     fun `update UI when init`() = coroutineTestRule.testDispatcher.runBlockingTest {
-        val observer = mock<Observer<UiModel>>()
-        detailViewModel.model.observeForever(observer)
-
-        verify(observer).onChanged(NotFavorite)
+        detailViewModel.model.test {
+            assertEquals(Loading,awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     @Test
     fun `onFabClicked update UI icon`() = coroutineTestRule.testDispatcher.runBlockingTest {
-        val observer = mock<Observer<UiModel>>()
-        detailViewModel.model.observeForever(observer)
 
-        detailViewModel.onFabClicked(character)
+        detailViewModel.onFabClicked(mockCharacter)
 
-        verify(observer).onChanged(NotFavorite)
-        verify(observer).onChanged(Loading)
-        verify(observer).onChanged(Favorite)
+        detailViewModel.model.test {
+            assertEquals(Loading,awaitItem())
+            assertEquals(Favorite,awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 }
