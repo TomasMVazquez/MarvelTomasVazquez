@@ -8,7 +8,7 @@ import com.toms.applications.marveltomasvazquez.data.database.model.CharacterDat
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class RoomDataSource(db: CharacterDatabase): LocalDataSource {
+class RoomDataSource(db: CharacterDatabase) : LocalDataSource {
 
     private val characterDao = db.characterDatabaseDao
 
@@ -18,12 +18,14 @@ class RoomDataSource(db: CharacterDatabase): LocalDataSource {
 
     override fun getCharacters(): Flow<List<MyCharacter>> {
         return characterDao.getCharacters().map { characters ->
-            characters.map { it.asDomainModel() } }
+            characters.map { it.asDomainModel() }
+        }
     }
 
     override fun getMyFavoritesCharacters(): Flow<List<MyCharacter>> {
         return characterDao.getCharacters().map { characters ->
-            characters.filter { it.isFavorite }.map { it.asDomainModel() } }
+            characters.filter { it.isFavorite }.map { it.asDomainModel() }
+        }
     }
 
     override fun searchCharacters(value: String): Flow<List<MyCharacter>> {
@@ -41,10 +43,10 @@ class RoomDataSource(db: CharacterDatabase): LocalDataSource {
     override fun getNumberSaved(): Int = characterDao.charactersCount()
 
     override fun addFavorite(favorite: MyCharacter) {
-        characterDao.insert(favorite.asDatabaseModel().copy(isFavorite = true))
+        characterDao.changeCharacterFavorite(true, favorite.id)
     }
 
     override fun removeFavorite(favorite: MyCharacter) {
-        characterDao.changeCharacterFavorite(false,favorite.id)
+        characterDao.changeCharacterFavorite(false, favorite.id)
     }
 }

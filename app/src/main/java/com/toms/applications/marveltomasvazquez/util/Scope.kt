@@ -1,11 +1,11 @@
-package com.applications.toms.depormas.utils
+package com.toms.applications.marveltomasvazquez.util
 
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
 interface Scope : CoroutineScope {
 
-    class ImplementJob(override val uiDispatcher: CoroutineDispatcher): Scope{
+    class ImplementJob(override val uiDispatcher: CoroutineDispatcher): Scope {
         override lateinit var job: Job
     }
 

@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.applications.toms.usecases.characters.GetAllCharacters
 import com.applications.toms.data.onFailure
 import com.applications.toms.data.onSuccess
-import com.applications.toms.depormas.utils.ScopedViewModel
+import com.toms.applications.marveltomasvazquez.util.ScopedViewModel
 import com.applications.toms.domain.MyCharacter
 import com.toms.applications.marveltomasvazquez.ui.customviews.InfoState
 import com.toms.applications.marveltomasvazquez.ui.screen.home.HomeViewModel.UiModel.*

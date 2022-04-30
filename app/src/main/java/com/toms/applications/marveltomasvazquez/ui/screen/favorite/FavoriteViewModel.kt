@@ -3,9 +3,8 @@ package com.toms.applications.marveltomasvazquez.ui.screen.favorite
 import android.text.Editable
 import com.applications.toms.usecases.favorites.GetFavorites
 import com.applications.toms.data.onSuccess
-import com.applications.toms.depormas.utils.ScopedViewModel
+import com.toms.applications.marveltomasvazquez.util.ScopedViewModel
 import com.applications.toms.domain.MyCharacter
-import com.toms.applications.marveltomasvazquez.data.asDatabaseModel
 import com.toms.applications.marveltomasvazquez.ui.screen.favorite.FavoriteViewModel.UiModel.*
 import com.toms.applications.marveltomasvazquez.util.Event
 import kotlinx.coroutines.CoroutineDispatcher
@@ -14,12 +13,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-class FavoriteViewModel(private val getFavorites: GetFavorites, uiDispatcher: CoroutineDispatcher)
-    : ScopedViewModel(uiDispatcher) {
+class FavoriteViewModel(private val getFavorites: GetFavorites, uiDispatcher: CoroutineDispatcher) :
+    ScopedViewModel(uiDispatcher) {
 
     sealed class UiModel {
-        object Loading: UiModel()
-        class Content(val characters: List<MyCharacter>): UiModel()
+        object Loading : UiModel()
+        class Content(val characters: List<MyCharacter>) : UiModel()
     }
 
     private val _model = MutableStateFlow<UiModel>(Loading)

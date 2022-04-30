@@ -1,7 +1,8 @@
-package com.applications.toms.depormas.utils
+package com.toms.applications.marveltomasvazquez.util
 
 import androidx.annotation.CallSuper
 import androidx.lifecycle.ViewModel
+import com.toms.applications.marveltomasvazquez.util.Scope
 import kotlinx.coroutines.CoroutineDispatcher
 
 abstract class ScopedViewModel(uiDispatcher: CoroutineDispatcher) : ViewModel(),

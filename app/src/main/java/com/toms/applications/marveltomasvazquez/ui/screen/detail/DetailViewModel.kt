@@ -4,7 +4,7 @@ import com.applications.toms.usecases.favorites.RemoveFromFavorites
 import com.applications.toms.usecases.favorites.GetFavorites
 import com.applications.toms.usecases.favorites.SaveToFavorites
 import com.applications.toms.data.onSuccess
-import com.applications.toms.depormas.utils.ScopedViewModel
+import com.toms.applications.marveltomasvazquez.util.ScopedViewModel
 import com.applications.toms.domain.MyCharacter
 import com.toms.applications.marveltomasvazquez.ui.screen.detail.DetailViewModel.UiModel.*
 import kotlinx.coroutines.CoroutineDispatcher

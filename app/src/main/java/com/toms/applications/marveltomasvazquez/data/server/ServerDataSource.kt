@@ -18,7 +18,6 @@ class ServerDataSource: RemoteDataSource {
     /**
      * Get data from Api Network
      */
-    //TODO Add fiter of order
     override suspend fun getCharacters(limit: Int, offset: Int): Flow<Either<List<MyCharacter>,String>>
     = flow {
         try {
