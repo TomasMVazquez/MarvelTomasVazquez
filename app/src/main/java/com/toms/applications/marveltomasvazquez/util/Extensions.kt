@@ -111,7 +111,7 @@ val RecyclerView.lastVisibleEvents: Flow<Int>
 
         val listener = object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                offer(lm.findLastVisibleItemPosition())
+                trySend(lm.findLastVisibleItemPosition())
             }
         }
         addOnScrollListener(listener)
