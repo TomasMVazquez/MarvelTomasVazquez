@@ -4,7 +4,6 @@ import com.applications.toms.data.source.LocalDataSource
 import com.applications.toms.domain.MyCharacter
 import com.toms.applications.marveltomasvazquez.data.asDatabaseModel
 import com.toms.applications.marveltomasvazquez.data.asDomainModel
-import com.toms.applications.marveltomasvazquez.data.database.model.CharacterDatabaseItem
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 

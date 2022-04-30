@@ -12,7 +12,7 @@ import androidx.navigation.fragment.navArgs
 import com.toms.applications.marveltomasvazquez.R
 import com.toms.applications.marveltomasvazquez.data.asDomainModel
 import com.toms.applications.marveltomasvazquez.databinding.FragmentDetailBinding
-import com.toms.applications.marveltomasvazquez.ui.screen.detail.DetailViewModel.*
+import com.toms.applications.marveltomasvazquez.ui.screen.detail.DetailViewModel.UiModel
 import com.toms.applications.marveltomasvazquez.ui.screen.detail.DetailViewModel.UiModel.*
 import com.toms.applications.marveltomasvazquez.util.collectFlow
 import org.koin.androidx.scope.ScopeFragment

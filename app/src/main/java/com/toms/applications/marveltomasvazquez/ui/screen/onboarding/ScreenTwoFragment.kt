@@ -1,11 +1,11 @@
 package com.toms.applications.marveltomasvazquez.ui.screen.onboarding
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.toms.applications.marveltomasvazquez.R
 import com.toms.applications.marveltomasvazquez.databinding.FragmentScreenTwoBinding

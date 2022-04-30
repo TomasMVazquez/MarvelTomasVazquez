@@ -16,8 +16,9 @@ import com.toms.applications.marveltomasvazquez.databinding.FragmentFavoriteBind
 import com.toms.applications.marveltomasvazquez.ui.adapters.CharactersRecyclerAdapter
 import com.toms.applications.marveltomasvazquez.ui.adapters.Listener
 import com.toms.applications.marveltomasvazquez.ui.customviews.InfoState
-import com.toms.applications.marveltomasvazquez.ui.screen.favorite.FavoriteViewModel.*
-import com.toms.applications.marveltomasvazquez.ui.screen.favorite.FavoriteViewModel.UiModel.*
+import com.toms.applications.marveltomasvazquez.ui.screen.favorite.FavoriteViewModel.UiModel
+import com.toms.applications.marveltomasvazquez.ui.screen.favorite.FavoriteViewModel.UiModel.Content
+import com.toms.applications.marveltomasvazquez.ui.screen.favorite.FavoriteViewModel.UiModel.Loading
 import com.toms.applications.marveltomasvazquez.util.Event
 import com.toms.applications.marveltomasvazquez.util.collectFlow
 import org.koin.androidx.scope.ScopeFragment

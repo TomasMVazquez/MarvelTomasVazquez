@@ -5,7 +5,6 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-import com.bumptech.glide.Glide
 import com.toms.applications.marveltomasvazquez.R
 import com.toms.applications.marveltomasvazquez.databinding.ItemInfoStateBinding
 

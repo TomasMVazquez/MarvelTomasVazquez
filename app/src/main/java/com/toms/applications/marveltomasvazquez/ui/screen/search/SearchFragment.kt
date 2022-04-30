@@ -17,7 +17,7 @@ import com.toms.applications.marveltomasvazquez.data.asDatabaseModel
 import com.toms.applications.marveltomasvazquez.databinding.FragmentSearchBinding
 import com.toms.applications.marveltomasvazquez.ui.adapters.CharactersRecyclerAdapter
 import com.toms.applications.marveltomasvazquez.ui.adapters.Listener
-import com.toms.applications.marveltomasvazquez.ui.screen.search.SearchViewModel.*
+import com.toms.applications.marveltomasvazquez.ui.screen.search.SearchViewModel.UiModel
 import com.toms.applications.marveltomasvazquez.util.Event
 import com.toms.applications.marveltomasvazquez.util.collectFlow
 import com.toms.applications.marveltomasvazquez.util.hideKeyboard

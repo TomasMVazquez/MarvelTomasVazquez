@@ -18,12 +18,12 @@ class CoroutineTestRule(
 
     private val mainThreadSurrogate = newSingleThreadContext("UI thread")
 
-    override fun starting(description: Description?) {
+    override fun starting(description: Description) {
         super.starting(description)
         Dispatchers.setMain(mainThreadSurrogate)
     }
 
-    override fun finished(description: Description?) {
+    override fun finished(description: Description) {
         Dispatchers.resetMain()
         mainThreadSurrogate.close()
         testDispatcher.cleanupTestCoroutines()

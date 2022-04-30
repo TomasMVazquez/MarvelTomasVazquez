@@ -9,7 +9,6 @@ import com.toms.applications.marveltomasvazquez.data.asDomainModel
 import com.toms.applications.marveltomasvazquez.util.md5Hash
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import java.lang.Exception
 
 class ServerDataSource: RemoteDataSource {
 

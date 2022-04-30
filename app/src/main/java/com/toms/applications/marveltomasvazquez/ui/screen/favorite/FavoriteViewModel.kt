@@ -1,12 +1,13 @@
 package com.toms.applications.marveltomasvazquez.ui.screen.favorite
 
 import android.text.Editable
-import com.applications.toms.usecases.favorites.GetFavorites
 import com.applications.toms.data.onSuccess
-import com.toms.applications.marveltomasvazquez.util.ScopedViewModel
 import com.applications.toms.domain.MyCharacter
-import com.toms.applications.marveltomasvazquez.ui.screen.favorite.FavoriteViewModel.UiModel.*
+import com.applications.toms.usecases.favorites.GetFavorites
+import com.toms.applications.marveltomasvazquez.ui.screen.favorite.FavoriteViewModel.UiModel.Content
+import com.toms.applications.marveltomasvazquez.ui.screen.favorite.FavoriteViewModel.UiModel.Loading
 import com.toms.applications.marveltomasvazquez.util.Event
+import com.toms.applications.marveltomasvazquez.util.ScopedViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

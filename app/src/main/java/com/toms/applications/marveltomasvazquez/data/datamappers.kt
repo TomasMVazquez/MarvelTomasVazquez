@@ -1,8 +1,8 @@
 package com.toms.applications.marveltomasvazquez.data
 
 import com.applications.toms.domain.MyCharacter
-import com.toms.applications.marveltomasvazquez.data.database.model.*
-import com.toms.applications.marveltomasvazquez.data.server.model.*
+import com.toms.applications.marveltomasvazquez.data.database.model.CharacterDatabaseItem
+import com.toms.applications.marveltomasvazquez.data.server.model.CharactersContainer
 
 fun CharactersContainer.asDomainModel(): List<MyCharacter>{
     return data.results.map {

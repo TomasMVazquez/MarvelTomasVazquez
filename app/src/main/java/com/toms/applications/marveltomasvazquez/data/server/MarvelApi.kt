@@ -3,7 +3,8 @@ package com.toms.applications.marveltomasvazquez.data.server
 import com.toms.applications.marveltomasvazquez.data.server.model.CharactersContainer
 import kotlinx.coroutines.Deferred
 import retrofit2.Response
-import retrofit2.http.*
+import retrofit2.http.GET
+import retrofit2.http.Query
 
 interface MarvelApi {
 

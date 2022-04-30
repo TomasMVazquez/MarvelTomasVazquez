@@ -1,13 +1,9 @@
 package com.toms.applications.marveltomasvazquez
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.MenuItem
 import android.view.View
-import androidx.navigation.NavController
+import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.toms.applications.marveltomasvazquez.databinding.ActivityMainBinding
 

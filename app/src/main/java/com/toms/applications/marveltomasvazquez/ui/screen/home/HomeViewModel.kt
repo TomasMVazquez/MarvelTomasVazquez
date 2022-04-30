@@ -2,11 +2,10 @@ package com.toms.applications.marveltomasvazquez.ui.screen.home
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.applications.toms.usecases.characters.GetAllCharacters
 import com.applications.toms.data.onFailure
 import com.applications.toms.data.onSuccess
-import com.toms.applications.marveltomasvazquez.util.ScopedViewModel
 import com.applications.toms.domain.MyCharacter
+import com.applications.toms.usecases.characters.GetAllCharacters
 import com.toms.applications.marveltomasvazquez.ui.customviews.InfoState
 import com.toms.applications.marveltomasvazquez.ui.screen.home.HomeViewModel.UiModel.*
 import com.toms.applications.marveltomasvazquez.util.*
