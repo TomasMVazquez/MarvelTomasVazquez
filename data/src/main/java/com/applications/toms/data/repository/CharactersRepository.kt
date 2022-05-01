@@ -3,10 +3,8 @@ package com.applications.toms.data.repository
 import com.applications.toms.data.*
 import com.applications.toms.data.source.LocalDataSource
 import com.applications.toms.data.source.RemoteDataSource
+import com.applications.toms.domain.ErrorStates
 import com.applications.toms.domain.MyCharacter
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flow
 
 /**
  * Extended from Interface to be able to replace it if necessary
@@ -14,29 +12,34 @@ import kotlinx.coroutines.flow.flow
  */
 class CharactersRepository(
     private val remoteDataSource: RemoteDataSource,
-    private val localDataSource: LocalDataSource) {
+    private val localDataSource: LocalDataSource
+) {
 
     // If user reach the total items returned then we need to fetch more
-    suspend fun getCharacters(offset: Int): Flow<Either<List<MyCharacter>, String>> = flow {
-        if (localDataSource.isEmpty() || offset > (localDataSource.getNumberSaved() - THRESHOLD_SIZE)){
-            fetchCharacters(offset).collect { result ->
-               result.onSuccess { localDataSource.saveCharacter(it) }
-                result.onFailure { emit(eitherFailure(it)) }
-            }
+    suspend fun getCharacters(offset: Int): Either<List<MyCharacter>, ErrorStates> =
+        if (localDataSource.isEmpty() || offset > (localDataSource.getNumberSaved() - THRESHOLD_SIZE)) {
+            fetchCharacters(offset)
+                .onSuccess {
+                    localDataSource.saveCharacter(it)
+                        .onSuccess {
+                            localDataSource.getCharacters()
+                                .onSuccess { success -> eitherSuccess(success) }
+                                .onFailure { fail -> eitherFailure(fail) }
+                        }
+                        .onFailure { fail -> eitherFailure(fail) }
+                }
+                .onFailure { eitherFailure(it) }
+        } else {
+            eitherFailure(ErrorStates.EMPTY)
         }
-        localDataSource.getCharacters().collect {
-            emit(eitherSuccess(it))
-        }
-    }
 
-    suspend fun fetchCharacters(offset: Int): Flow<Either<List<MyCharacter>, String>> = flow {
-        remoteDataSource.getCharacters(NETWORK_LIMIT_CHARACTERS, offset).collect { result ->
-            result.onSuccess { emit(eitherSuccess(it)) }
-            result.onFailure { emit(eitherFailure(it)) }
-        }
-    }
 
-    companion object{
+    suspend fun fetchCharacters(offset: Int): Either<List<MyCharacter>, ErrorStates> =
+        remoteDataSource.getCharacters(NETWORK_LIMIT_CHARACTERS, offset)
+            .onSuccess { eitherSuccess(it) }
+            .onFailure { eitherFailure(it) }
+
+    companion object {
         const val NETWORK_LIMIT_CHARACTERS = 100 // API limit of 100
         const val THRESHOLD_SIZE = 25
     }

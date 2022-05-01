@@ -1,18 +1,19 @@
 package com.applications.toms.data.source
 
+import com.applications.toms.data.Either
+import com.applications.toms.data.EitherState
+import com.applications.toms.domain.ErrorStates
 import com.applications.toms.domain.MyCharacter
-import kotlinx.coroutines.flow.Flow
 
 interface LocalDataSource {
 
-    fun saveCharacter(items: List<MyCharacter>)
-    fun getCharacters(): Flow<List<MyCharacter>>
-    fun getMyFavoritesCharacters(): Flow<List<MyCharacter>>
-    fun searchCharacters(value: String): Flow<List<MyCharacter>>
-    fun deleteCharacter(id: Long)
+    suspend fun saveCharacter(items: List<MyCharacter>): Either<EitherState, ErrorStates>
+    suspend fun getCharacters(): Either<List<MyCharacter>, ErrorStates>
+    suspend fun getMyFavoritesCharacters(): Either<List<MyCharacter>, ErrorStates>
+    suspend fun searchCharacters(value: String): Either<List<MyCharacter>, ErrorStates>
     fun isEmpty(): Boolean
     fun getNumberSaved(): Int
-    fun addFavorite(favorite: MyCharacter)
-    fun removeFavorite(favorite: MyCharacter)
+    suspend fun addFavorite(favorite: MyCharacter): Either<EitherState, ErrorStates>
+    suspend fun removeFavorite(favorite: MyCharacter): Either<EitherState, ErrorStates>
 
 }

@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.applications.toms.data.onFailure
 import com.applications.toms.data.onSuccess
+import com.applications.toms.data.repository.CharactersRepository
 import com.applications.toms.domain.MyCharacter
 import com.applications.toms.usecases.characters.GetAllCharacters
 import com.toms.applications.marveltomasvazquez.ui.customviews.InfoState
@@ -12,7 +13,6 @@ import com.toms.applications.marveltomasvazquez.util.*
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class HomeViewModel(private val getAllCharacters: GetAllCharacters, uiDispatcher: CoroutineDispatcher)
@@ -50,7 +50,7 @@ class HomeViewModel(private val getAllCharacters: GetAllCharacters, uiDispatcher
     fun notifyLastVisible(scrolledTo: Int) {
         characters.value?.let { list ->
             val size = list.size
-            if (scrolledTo >= (size - getAllCharacters.thresholdSize)){
+            if (scrolledTo >= (size - CharactersRepository.THRESHOLD_SIZE)){
                 _model.value = Loading
                 getCharacterFromUseCase(size)
             }
@@ -59,8 +59,8 @@ class HomeViewModel(private val getAllCharacters: GetAllCharacters, uiDispatcher
 
     private fun getCharacterFromUseCase(size: Int){
         launch {
-            getAllCharacters.prepare(GetAllCharacters.OkInput(size)).collect { result ->
-                result.onSuccess { list ->
+            getAllCharacters.execute(GetAllCharacters.OkInput(size))
+                .onSuccess { list ->
                     list.asSequence().iterator().forEach {
                         if (size > 0)
                             _characters.addNewItemAt(size,it)
@@ -69,10 +69,9 @@ class HomeViewModel(private val getAllCharacters: GetAllCharacters, uiDispatcher
                         _characters.notifyObserver()
                     }
                 }
-                result.onFailure { _model.value = ErrorWatcher(InfoState.OTHER) }
+                .onFailure { _model.value = ErrorWatcher(InfoState.OTHER) }
             }
         }
-    }
 
     fun onCharactersChanged(list: MutableList<MyCharacter>?) {
         if (!list.isNullOrEmpty()) _model.value = Content(list)

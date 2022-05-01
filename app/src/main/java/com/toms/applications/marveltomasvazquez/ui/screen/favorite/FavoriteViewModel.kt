@@ -11,11 +11,12 @@ import com.toms.applications.marveltomasvazquez.util.ScopedViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-class FavoriteViewModel(private val getFavorites: GetFavorites, uiDispatcher: CoroutineDispatcher) :
-    ScopedViewModel(uiDispatcher) {
+class FavoriteViewModel(
+    private val getFavorites: GetFavorites,
+    uiDispatcher: CoroutineDispatcher
+) : ScopedViewModel(uiDispatcher) {
 
     sealed class UiModel {
         object Loading : UiModel()
@@ -31,15 +32,13 @@ class FavoriteViewModel(private val getFavorites: GetFavorites, uiDispatcher: Co
     init {
         _model.value = Loading
         launch {
-            getFavorites.prepare(null).collect { result ->
-                result.onSuccess { flow ->
-                    flow.collect { list ->
-                        _model.value = Content(list)
-                    }
+            getFavorites.execute(null)
+                .onSuccess {
+                    _model.value = Content(it)
                 }
-            }
         }
     }
+
 
     override fun onCleared() {
         cancelScope()
@@ -53,14 +52,10 @@ class FavoriteViewModel(private val getFavorites: GetFavorites, uiDispatcher: Co
     fun onSearchCharacter(value: Editable?) {
         _model.value = Loading
         launch {
-            getFavorites.prepare(value.toString()).collect { result ->
-                result.onSuccess { flow ->
-                    flow.collect { list ->
-                        _model.value = Content(list)
-                    }
+            getFavorites.execute(value.toString())
+                .onSuccess {
+                    _model.value = Content(it)
                 }
-            }
         }
     }
-
 }

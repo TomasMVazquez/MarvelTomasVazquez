@@ -12,17 +12,18 @@ import com.toms.applications.marveltomasvazquez.util.ScopedViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-class SearchViewModel(private val searchRepository: SearchRepository, uiDispatcher: CoroutineDispatcher)
-    : ScopedViewModel(uiDispatcher) {
+class SearchViewModel(
+    private val searchRepository: SearchRepository,
+    uiDispatcher: CoroutineDispatcher
+) : ScopedViewModel(uiDispatcher) {
 
     sealed class UiModel {
-        object None: UiModel()
-        object Loading: UiModel()
-        class Content(val characters: List<MyCharacter>): UiModel()
-        class ErrorWatcher(val infoState: InfoState): UiModel()
+        object None : UiModel()
+        object Loading : UiModel()
+        class Content(val characters: List<MyCharacter>) : UiModel()
+        class ErrorWatcher(val infoState: InfoState) : UiModel()
     }
 
     private val _model = MutableStateFlow<UiModel>(Loading)
@@ -38,17 +39,16 @@ class SearchViewModel(private val searchRepository: SearchRepository, uiDispatch
     fun onSearchBtnClicked(value: Editable) {
         _model.value = Loading
         launch {
-            searchRepository.getCharacters(value.toString()).collect { result ->
-                result.onSuccess {
+            searchRepository.getCharacters(value.toString())
+                .onSuccess {
                     if (it.isEmpty())
                         _model.value = ErrorWatcher(InfoState.SEARCH_EMPTY)
                     else
                         _model.value = Content(it)
                 }
-                result.onFailure {
+                .onFailure {
                     _model.value = ErrorWatcher(InfoState.OTHER)
                 }
-            }
         }
     }
 

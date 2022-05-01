@@ -1,5 +1,6 @@
 package com.toms.applications.marveltomasvazquez.ui.screen.detail
 
+import com.applications.toms.data.onFailure
 import com.applications.toms.data.onSuccess
 import com.applications.toms.domain.MyCharacter
 import com.applications.toms.usecases.favorites.GetFavorites
@@ -10,20 +11,20 @@ import com.toms.applications.marveltomasvazquez.util.ScopedViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-class DetailViewModel(private val getFavorites: GetFavorites,
-                      private val saveToFavorites: SaveToFavorites,
-                      private val removeFromFavorites: RemoveFromFavorites,
-                      character: MyCharacter,
-                      uiDispatcher: CoroutineDispatcher)
-    : ScopedViewModel(uiDispatcher) {
+class DetailViewModel(
+    private val getFavorites: GetFavorites,
+    private val saveToFavorites: SaveToFavorites,
+    private val removeFromFavorites: RemoveFromFavorites,
+    character: MyCharacter,
+    uiDispatcher: CoroutineDispatcher
+) : ScopedViewModel(uiDispatcher) {
 
-    sealed class UiModel{
-        object Loading: UiModel()
-        object Favorite: UiModel()
-        object NotFavorite: UiModel()
+    sealed class UiModel {
+        object Loading : UiModel()
+        object Favorite : UiModel()
+        object NotFavorite : UiModel()
     }
 
     private val _model = MutableStateFlow<UiModel>(UiModel.Loading)
@@ -35,31 +36,30 @@ class DetailViewModel(private val getFavorites: GetFavorites,
 
     init {
         launch {
-            getFavorites.prepare(null).collect { result ->
-                result.onSuccess { flow ->
-                    flow.collect { list ->
-                        databaseItems = list
-                        favorite = databaseItems.contains(character)
-                        _model.value = if(favorite) Favorite else NotFavorite
-                    }
+            getFavorites.execute(null)
+                .onSuccess {
+                    databaseItems = it
+                    favorite = databaseItems.contains(character)
+                    _model.value = if (favorite) Favorite else NotFavorite
                 }
-            }
         }
     }
 
-    fun onFabClicked(character: MyCharacter){
+
+    fun onFabClicked(character: MyCharacter) {
         _model.value = Loading
         launch {
-            favorite = if (favorite){
-                removeFromFavorites.invoke(character)
-                _model.value = NotFavorite
+            favorite = if (favorite) {
+                removeFromFavorites.execute(character)
+                    .onSuccess { _model.value = NotFavorite }
+                    .onFailure { /*TODO*/ }
                 false
-            }else {
-                saveToFavorites.invoke(character)
-                _model.value = Favorite
+            } else {
+                saveToFavorites.execute(character)
+                    .onSuccess { _model.value = Favorite }
+                    .onFailure { /*TODO*/ }
                 true
             }
         }
-
     }
 }
