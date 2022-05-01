@@ -20,7 +20,7 @@ class CharactersRepository(
         if (localDataSource.isEmpty() || offset > (localDataSource.getNumberSaved() - THRESHOLD_SIZE)) {
             fetchCharacters(offset)
                 .onSuccess {
-                    localDataSource.saveCharacter(it)
+                    localDataSource.saveCharacter(it.distinct())
                         .onSuccess {
                             localDataSource.getCharacters()
                                 .onSuccess { success -> eitherSuccess(success) }

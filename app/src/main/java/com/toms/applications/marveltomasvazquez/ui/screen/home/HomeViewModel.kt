@@ -51,9 +51,10 @@ class HomeViewModel(
             getAllCharacters.execute(GetAllCharacters.OkInput(size))
                 .onSuccess { list ->
                     if (!list.isNullOrEmpty()) {
+                        val newList = state.value.characters + list
                         _state.value = state.value.copy(
                             loading = false,
-                            characters = list
+                            characters = newList
                         )
                     } else {
                         _state.value = state.value.copy(

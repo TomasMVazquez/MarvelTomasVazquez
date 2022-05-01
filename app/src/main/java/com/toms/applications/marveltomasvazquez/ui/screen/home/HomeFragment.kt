@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.toms.applications.marveltomasvazquez.R
 import com.toms.applications.marveltomasvazquez.data.asDatabaseModel
@@ -12,7 +13,9 @@ import com.toms.applications.marveltomasvazquez.databinding.FragmentHomeBinding
 import com.toms.applications.marveltomasvazquez.ui.adapters.CharactersRecyclerAdapter
 import com.toms.applications.marveltomasvazquez.ui.adapters.Listener
 import com.toms.applications.marveltomasvazquez.util.collectEvent
+import com.toms.applications.marveltomasvazquez.util.collectFlow
 import com.toms.applications.marveltomasvazquez.util.collectState
+import com.toms.applications.marveltomasvazquez.util.lastVisibleEvents
 import org.koin.androidx.scope.ScopeFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -39,6 +42,10 @@ class HomeFragment : ScopeFragment() {
 
         collectState(homeViewModel.state, ::renderState)
         collectEvent(homeViewModel.event, ::launchEvent)
+
+        lifecycleScope.collectFlow(binding.charactersRecycler.lastVisibleEvents) {
+            homeViewModel.notifyLastVisible(it)
+        }
 
         return binding.root
     }

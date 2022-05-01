@@ -6,11 +6,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.*
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.conflate
+import kotlinx.coroutines.flow.*
 import java.math.BigInteger
 import java.security.MessageDigest
 
@@ -49,6 +47,10 @@ fun <T> Fragment.collectEvent(flow: Flow<T>, collect: suspend (T) -> Unit) {
     }
 }
 
+fun <T> CoroutineScope.collectFlow(flow: Flow<T>, body: suspend (T) -> Unit) {
+    flow.onEach { body(it) }
+        .launchIn(this)
+}
 /**
  * To be able to hide softkeyboard on demand
  */
