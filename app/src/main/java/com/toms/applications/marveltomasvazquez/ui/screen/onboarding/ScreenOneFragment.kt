@@ -19,7 +19,7 @@ class ScreenOneFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = DataBindingUtil.inflate(inflater,R.layout.fragment_screen_one, container,false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_screen_one, container, false)
 
         val viewPager = activity?.findViewById<ViewPager2>(R.id.onBoardingViewPager)
 

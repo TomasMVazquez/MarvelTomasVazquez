@@ -6,15 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.toms.applications.marveltomasvazquez.R
 import com.toms.applications.marveltomasvazquez.data.asDomainModel
 import com.toms.applications.marveltomasvazquez.databinding.FragmentDetailBinding
-import com.toms.applications.marveltomasvazquez.ui.screen.detail.DetailViewModel.UiModel
-import com.toms.applications.marveltomasvazquez.ui.screen.detail.DetailViewModel.UiModel.*
-import com.toms.applications.marveltomasvazquez.util.collectFlow
+import com.toms.applications.marveltomasvazquez.util.collectState
 import org.koin.androidx.scope.ScopeFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -32,29 +29,39 @@ class DetailFragment : ScopeFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = DataBindingUtil.inflate(inflater,R.layout.fragment_detail, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_detail, container, false)
 
-        with(binding){
+        with(binding) {
             detailViewModel = viewModel
             character = args.character.asDomainModel()
             characterDetails.setAttributions(args.character.asDomainModel())
-            with(toolbar){
+            with(toolbar) {
                 setNavigationIcon(R.drawable.ic_baseline_arrow_back)
                 setNavigationOnClickListener { findNavController().popBackStack() }
             }
         }
 
-        lifecycleScope.collectFlow(viewModel.model,::updateUI)
-        
+        collectState(viewModel.state, ::renderState)
+
         return binding.root
     }
 
-    private fun updateUI(model: UiModel?) {
-        binding.loading.visibility = if (model == Loading) View.VISIBLE else View.GONE
-        when(model){
-            Favorite -> binding.fabFavourite.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.ic_baseline_favorite_24))
-            NotFavorite -> binding.fabFavourite.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.ic_baseline_favorite_border))
-        }
+    private fun renderState(state: DetailViewModel.State) {
+        binding.loading.visibility = if (state.loading) View.VISIBLE else View.GONE
+        if (state.isFavorite)
+            binding.fabFavourite.setImageDrawable(
+                ContextCompat.getDrawable(
+                    requireContext(),
+                    R.drawable.ic_baseline_favorite_24
+                )
+            )
+        else
+            binding.fabFavourite.setImageDrawable(
+                ContextCompat.getDrawable(
+                    requireContext(),
+                    R.drawable.ic_baseline_favorite_border
+                )
+            )
     }
 
 }

@@ -6,7 +6,7 @@ import androidx.lifecycle.Observer
  * Reduce boilerplate on viewModels
  * Allowing to go through a variable just once (useful for navigation)
  */
-open class Event <out T>(private val content: T) {
+open class Event<out T>(private val content: T) {
 
     var hasBeenHandled = false
         private set // Allow external read but not write

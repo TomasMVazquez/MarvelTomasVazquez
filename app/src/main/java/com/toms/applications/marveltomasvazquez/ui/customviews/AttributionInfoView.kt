@@ -12,12 +12,12 @@ import com.toms.applications.marveltomasvazquez.R
  * Allows to create a view wit all information needed and reduce XML size
  */
 class AttributionInfoView @JvmOverloads constructor(
-        context: Context,
-        attrs: AttributeSet? = null,
-        defStyleAttr: Int = 0
-): AppCompatTextView(context,attrs,defStyleAttr) {
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : AppCompatTextView(context, attrs, defStyleAttr) {
 
-    fun setAttributions(character: MyCharacter){
+    fun setAttributions(character: MyCharacter) {
         text = buildSpannedString {
             if (character.description.isNotEmpty()) {
                 bold { append(context.getString(R.string.detail_description)) }

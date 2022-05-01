@@ -6,9 +6,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.*
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.conflate
 import java.math.BigInteger
 import java.security.MessageDigest
 
@@ -24,27 +26,35 @@ fun String.md5Hash(): String {
  * Reduce Boilerplate when creating view models
  */
 @Suppress("UNCHECKED_CAST")
-inline fun <reified T: ViewModel> Fragment.getViewModel(crossinline factory: () -> T): T {
-    val vmFactory = object: ViewModelProvider.Factory{
+inline fun <reified T : ViewModel> Fragment.getViewModel(crossinline factory: () -> T): T {
+    val vmFactory = object : ViewModelProvider.Factory {
         override fun <U : ViewModel?> create(modelClass: Class<U>): U = factory() as U
     }
 
-    return ViewModelProvider(this,vmFactory).get(T::class.java)
+    return ViewModelProvider(this, vmFactory).get(T::class.java)
 }
 
 /**
- * Reduce Boilerplate when collecting flows
+ * Reduce Boilerplate when collecting Events and States
  */
-fun <T> CoroutineScope.collectFlow(flow: Flow<T>, body: suspend (T) -> Unit) {
-    flow.onEach { body(it) }
-        .launchIn(this)
+fun <T> Fragment.collectState(flow: Flow<T>, collect: suspend (T) -> Unit) {
+    viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+        flow.collectLatest(collect)
+    }
+}
+
+fun <T> Fragment.collectEvent(flow: Flow<T>, collect: suspend (T) -> Unit) {
+    viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+        flow.collectLatest(collect)
+    }
 }
 
 /**
  * To be able to hide softkeyboard on demand
  */
 fun Fragment.hideKeyboard() {
-    val inputMethodManager = this.activity?.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+    val inputMethodManager =
+        this.activity?.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
     inputMethodManager.hideSoftInputFromWindow(view?.windowToken, 0)
 }
 

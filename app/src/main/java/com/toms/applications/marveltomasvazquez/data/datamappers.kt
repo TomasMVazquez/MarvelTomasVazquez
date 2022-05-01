@@ -4,7 +4,7 @@ import com.applications.toms.domain.MyCharacter
 import com.toms.applications.marveltomasvazquez.data.database.model.CharacterDatabaseItem
 import com.toms.applications.marveltomasvazquez.data.server.model.CharactersContainer
 
-fun CharactersContainer.asDomainModel(): List<MyCharacter>{
+fun CharactersContainer.asDomainModel(): List<MyCharacter> {
     return data.results.map {
         MyCharacter(
             id = it.id,

@@ -20,7 +20,8 @@ class ScreenThreeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = DataBindingUtil.inflate(inflater,R.layout.fragment_screen_three, container, false)
+        binding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_screen_three, container, false)
 
         binding.btnFinish.setOnClickListener {
             onBoardingFinish()

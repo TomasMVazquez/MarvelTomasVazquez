@@ -19,7 +19,7 @@ class OnBoardingFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = DataBindingUtil.inflate(inflater,R.layout.fragment_on_boarding,container,false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_on_boarding, container, false)
 
         val fragmentList = arrayListOf<Fragment>(
             ScreenOneFragment(),
@@ -27,7 +27,8 @@ class OnBoardingFragment : Fragment() {
             ScreenThreeFragment()
         )
 
-        val adapter = ViewPagerAdapter(fragmentList,requireActivity().supportFragmentManager,lifecycle)
+        val adapter =
+            ViewPagerAdapter(fragmentList, requireActivity().supportFragmentManager, lifecycle)
 
         binding.onBoardingViewPager.adapter = adapter
 

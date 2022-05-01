@@ -13,13 +13,14 @@ class AspectRatioImageView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-): AppCompatImageView(context, attrs, defStyleAttr) {
+) : AppCompatImageView(context, attrs, defStyleAttr) {
 
     var ratio = 1f
 
     init {
-        val styledAttribute = context.obtainStyledAttributes(attrs, R.styleable.AspectRatioImageView)
-        ratio = styledAttribute.getFloat(R.styleable.AspectRatioImageView_ratio,1f)
+        val styledAttribute =
+            context.obtainStyledAttributes(attrs, R.styleable.AspectRatioImageView)
+        ratio = styledAttribute.getFloat(R.styleable.AspectRatioImageView_ratio, 1f)
         styledAttribute.recycle()
     }
 
@@ -31,13 +32,13 @@ class AspectRatioImageView @JvmOverloads constructor(
 
         if (width == 0 && height == 0) return
 
-        if (width > 0){
+        if (width > 0) {
             height = (width * ratio).toInt()
-        }else if (height > 0) {
+        } else if (height > 0) {
             width = (height * ratio).toInt()
         }
 
-        setMeasuredDimension(width,height)
+        setMeasuredDimension(width, height)
     }
 
 }

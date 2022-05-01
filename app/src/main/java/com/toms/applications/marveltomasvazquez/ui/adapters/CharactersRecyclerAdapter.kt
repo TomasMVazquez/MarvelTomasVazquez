@@ -12,8 +12,8 @@ import com.toms.applications.marveltomasvazquez.databinding.RecyclerItemCharacte
  * To inflate the items into the recycler
  * Adapter used on each recycler (Search, Home and Favorite Fragments)
  */
-class CharactersRecyclerAdapter (private val clickListener: Listener):
-    ListAdapter<MyCharacter, CharactersRecyclerAdapter.ViewHolder>(ClassDiffCallback()){
+class CharactersRecyclerAdapter(private val clickListener: Listener) :
+    ListAdapter<MyCharacter, CharactersRecyclerAdapter.ViewHolder>(ClassDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder.from(
@@ -34,33 +34,34 @@ class CharactersRecyclerAdapter (private val clickListener: Listener):
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
         item?.let {
-            holder.bind(it,clickListener)
+            holder.bind(it, clickListener)
         }
     }
 
-    class ViewHolder private constructor(val binding: RecyclerItemCharacterBinding): RecyclerView.ViewHolder(binding.root){
+    class ViewHolder private constructor(val binding: RecyclerItemCharacterBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: MyCharacter, listener: Listener) {
             val res = itemView.context
-            with(binding){
+            with(binding) {
                 clickListener = listener
                 character = item
                 executePendingBindings()
             }
         }
 
-        fun startAnimation(){
+        fun startAnimation() {
             binding.constraintLayout.transitionToEnd()
         }
 
-        fun clearAnimation(){
+        fun clearAnimation() {
             binding.constraintLayout.progress = 0F
         }
 
         companion object {
             fun from(parent: ViewGroup): ViewHolder {
-                val layoutInflater =  LayoutInflater.from(parent.context)
-                val binding = RecyclerItemCharacterBinding.inflate(layoutInflater,parent,false)
+                val layoutInflater = LayoutInflater.from(parent.context)
+                val binding = RecyclerItemCharacterBinding.inflate(layoutInflater, parent, false)
                 return ViewHolder(
                     binding
                 )
@@ -80,6 +81,6 @@ class CharactersRecyclerAdapter (private val clickListener: Listener):
     }
 }
 
-class Listener(val clickListener: (character: MyCharacter) -> Unit){
+class Listener(val clickListener: (character: MyCharacter) -> Unit) {
     fun onClick(character: MyCharacter) = clickListener(character)
 }

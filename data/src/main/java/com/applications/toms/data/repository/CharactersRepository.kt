@@ -30,7 +30,9 @@ class CharactersRepository(
                 }
                 .onFailure { eitherFailure(it) }
         } else {
-            eitherFailure(ErrorStates.EMPTY)
+            localDataSource.getCharacters()
+                .onSuccess { success -> eitherSuccess(success) }
+                .onFailure { fail -> eitherFailure(fail) }
         }
 
 

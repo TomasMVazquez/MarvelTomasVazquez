@@ -7,18 +7,18 @@ import androidx.core.content.edit
 /**
  * To start or not the onBoarding when initializing the app
  */
-fun getSharedPreferences(context: Context): SharedPreferences{
+fun getSharedPreferences(context: Context): SharedPreferences {
     return context.getSharedPreferences("preferences", Context.MODE_PRIVATE)
 }
 
-object SharedPreferencesKeys{
+object SharedPreferencesKeys {
     const val ON_BOARDING = "onBoarding"
 }
 
-fun onFinishOnBoarding(context: Context){
-    getSharedPreferences(context).edit{ putBoolean(SharedPreferencesKeys.ON_BOARDING,true) }
+fun onFinishOnBoarding(context: Context) {
+    getSharedPreferences(context).edit { putBoolean(SharedPreferencesKeys.ON_BOARDING, true) }
 }
 
-fun onBoardingFinished(context: Context): Boolean{
-    return getSharedPreferences(context).getBoolean(SharedPreferencesKeys.ON_BOARDING,false)
+fun onBoardingFinished(context: Context): Boolean {
+    return getSharedPreferences(context).getBoolean(SharedPreferencesKeys.ON_BOARDING, false)
 }

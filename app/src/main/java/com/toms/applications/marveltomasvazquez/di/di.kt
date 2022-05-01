@@ -50,30 +50,30 @@ private val appModule = module {
 }
 
 private val dataModule = module {
-    factory { CharactersRepository(get(),get()) }
+    factory { CharactersRepository(get(), get()) }
     factory { FavoriteRepository(get()) }
     factory { SearchRepository(get()) }
 }
 
 private val scopesModule = module {
     scope(named<HomeFragment>()) {
-        viewModel { HomeViewModel(get(),get()) }
+        viewModel { HomeViewModel(get()) }
         scoped { GetAllCharacters(get()) }
     }
 
     scope(named<FavoriteFragment>()) {
-        viewModel { FavoriteViewModel(get(),get()) }
+        viewModel { FavoriteViewModel(get()) }
         scoped { GetFavorites(get()) }
     }
 
     scope(named<DetailFragment>()) {
-        viewModel { (character: MyCharacter) -> DetailViewModel(get(),get(),get(),character,get()) }
+        viewModel { (character: MyCharacter) -> DetailViewModel(get(), get(), get(), character) }
         scoped { GetFavorites(get()) }
         scoped { SaveToFavorites(get()) }
         scoped { RemoveFromFavorites(get()) }
     }
 
     scope(named<SearchFragment>()) {
-        viewModel { SearchViewModel(get(),get()) }
+        viewModel { SearchViewModel(get()) }
     }
 }

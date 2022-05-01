@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import com.toms.applications.marveltomasvazquez.data.database.model.CharacterDatabaseItem
 
 @Database(entities = [CharacterDatabaseItem::class], version = 1, exportSchema = false)
-abstract class CharacterDatabase: RoomDatabase()     {
+abstract class CharacterDatabase : RoomDatabase() {
     abstract val characterDatabaseDao: CharacterDatabaseDao
 
     companion object {
@@ -21,13 +21,13 @@ abstract class CharacterDatabase: RoomDatabase()     {
 
                 if (instance == null) {
                     instance = Room.databaseBuilder(
-                            context.applicationContext,
-                            CharacterDatabase::class.java,
-                            "marvel_characters_table"
+                        context.applicationContext,
+                        CharacterDatabase::class.java,
+                        "marvel_characters_table"
                     )
-                            .allowMainThreadQueries()
-                            .fallbackToDestructiveMigration()
-                            .build()
+                        .allowMainThreadQueries()
+                        .fallbackToDestructiveMigration()
+                        .build()
                     INSTANCE = instance
                 }
                 return instance

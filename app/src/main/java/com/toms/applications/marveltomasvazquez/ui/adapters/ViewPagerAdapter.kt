@@ -9,7 +9,11 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
  * To Inflate the OnBoarding screens
  * used on OnBoarding Fragment
  */
-class ViewPagerAdapter(private val list: ArrayList<Fragment>,fragmentManager: FragmentManager, lifecycle: Lifecycle): FragmentStateAdapter(fragmentManager,lifecycle) {
+class ViewPagerAdapter(
+    private val list: ArrayList<Fragment>,
+    fragmentManager: FragmentManager,
+    lifecycle: Lifecycle
+) : FragmentStateAdapter(fragmentManager, lifecycle) {
 
     override fun getItemCount(): Int = list.size
 

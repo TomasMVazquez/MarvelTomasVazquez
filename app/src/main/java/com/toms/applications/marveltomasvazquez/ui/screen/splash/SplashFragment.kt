@@ -22,13 +22,13 @@ class SplashFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = DataBindingUtil.inflate(inflater,R.layout.fragment_splash,container,false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_splash, container, false)
 
         // Shows splash for a period of time and then continue navigations
         Handler(Looper.getMainLooper()).postDelayed({
             if (onBoardingFinished(requireContext())) {
                 goToHome()
-            }else{
+            } else {
                 loadSplashScreen()
             }
         }, TIME_OUT)
@@ -47,6 +47,6 @@ class SplashFragment : Fragment() {
 
     companion object {
         private const val TAG = "SplashFragment"
-        const val TIME_OUT:Long = 3000
+        const val TIME_OUT: Long = 3000
     }
 }

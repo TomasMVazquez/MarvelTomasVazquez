@@ -1,80 +1,91 @@
 package com.toms.applications.marveltomasvazquez.ui.screen.home
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.applications.toms.data.onFailure
 import com.applications.toms.data.onSuccess
 import com.applications.toms.data.repository.CharactersRepository
 import com.applications.toms.domain.MyCharacter
 import com.applications.toms.usecases.characters.GetAllCharacters
 import com.toms.applications.marveltomasvazquez.ui.customviews.InfoState
-import com.toms.applications.marveltomasvazquez.ui.screen.home.HomeViewModel.UiModel.*
 import com.toms.applications.marveltomasvazquez.util.*
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-class HomeViewModel(private val getAllCharacters: GetAllCharacters, uiDispatcher: CoroutineDispatcher)
-    : ScopedViewModel(uiDispatcher) {
+class HomeViewModel(
+    private val getAllCharacters: GetAllCharacters
+) : ViewModel() {
 
-    sealed class UiModel {
-        object Loading: UiModel()
-        class Content(val characters: MutableList<MyCharacter>?): UiModel()
-        class ErrorWatcher(val state: InfoState): UiModel()
-    }
+    private val _state = MutableStateFlow(State())
+    val state: StateFlow<State> = _state.asStateFlow()
 
-    private val _model = MutableStateFlow<UiModel>(Loading)
-    val model: StateFlow<UiModel> get() = _model
-
-    private val _characters = MutableLiveData<MutableList<MyCharacter>>()
-    val characters: LiveData<MutableList<MyCharacter>> get() = _characters
-
-    private val _navigation = MutableStateFlow<Event<MyCharacter?>>(Event(null))
-    val navigation: StateFlow<Event<MyCharacter?>> get() = _navigation
+    private val _event = MutableSharedFlow<Event>()
+    val event: SharedFlow<Event> = _event.asSharedFlow()
 
     init {
-        _model.value = Loading
         getCharacterFromUseCase(0)
     }
 
-    override fun onCleared() {
-        cancelScope()
-        super.onCleared()
-    }
-
     fun onCharacterClicked(character: MyCharacter) {
-        _navigation.value = Event(character)
+        viewModelScope.launch {
+            _event.emit(
+                Event.GoToDetail(character)
+            )
+        }
     }
 
     fun notifyLastVisible(scrolledTo: Int) {
-        characters.value?.let { list ->
+        _state.value.characters.let { list ->
             val size = list.size
-            if (scrolledTo >= (size - CharactersRepository.THRESHOLD_SIZE)){
-                _model.value = Loading
+            if (scrolledTo >= (size - CharactersRepository.THRESHOLD_SIZE)) {
+                _state.value = state.value.copy(
+                    loading = true,
+                )
                 getCharacterFromUseCase(size)
             }
         }
     }
 
-    private fun getCharacterFromUseCase(size: Int){
-        launch {
+    private fun getCharacterFromUseCase(size: Int) {
+        viewModelScope.launch {
             getAllCharacters.execute(GetAllCharacters.OkInput(size))
                 .onSuccess { list ->
-                    list.asSequence().iterator().forEach {
-                        if (size > 0)
-                            _characters.addNewItemAt(size,it)
-                        else
-                            _characters.addNewItem(it)
-                        _characters.notifyObserver()
+                    if (!list.isNullOrEmpty()) {
+                        _state.value = state.value.copy(
+                            loading = false,
+                            characters = list
+                        )
+                    } else {
+                        _state.value = state.value.copy(
+                            loading = false,
+                            errorWatcher = InfoState.NETWORK_ERROR
+                        )
                     }
                 }
-                .onFailure { _model.value = ErrorWatcher(InfoState.OTHER) }
-            }
+                .onFailure {
+                    _state.value = state.value.copy(
+                        loading = false,
+                        errorWatcher = InfoState.OTHER
+                    )
+                }
         }
-
-    fun onCharactersChanged(list: MutableList<MyCharacter>?) {
-        if (!list.isNullOrEmpty()) _model.value = Content(list)
     }
 
+    fun onCharactersChanged(list: MutableList<MyCharacter>?) {
+        if (!list.isNullOrEmpty())
+            _state.value = state.value.copy(
+                loading = false,
+                characters = list
+            )
+    }
+
+    data class State(
+        val loading: Boolean = true,
+        val characters: List<MyCharacter> = emptyList(),
+        val errorWatcher: InfoState? = null
+    )
+
+    sealed class Event {
+        data class GoToDetail(val character: MyCharacter) : Event()
+    }
 }
