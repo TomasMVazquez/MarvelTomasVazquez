@@ -1,36 +1,14 @@
 package com.toms.applications.marveltomasvazquez
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Observer
-import app.cash.turbine.test
-import com.applications.toms.data.repository.SearchRepository
-import com.applications.toms.testshared.mockCharacter
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.toms.applications.marveltomasvazquez.repositories.FakeRemoteRepository
-import com.toms.applications.marveltomasvazquez.rules.CoroutineTestRule
-import com.toms.applications.marveltomasvazquez.ui.customviews.InfoState
-import com.toms.applications.marveltomasvazquez.ui.screen.search.SearchViewModel
-import com.toms.applications.marveltomasvazquez.ui.screen.search.SearchViewModel.*
-import com.toms.applications.marveltomasvazquez.ui.screen.search.SearchViewModel.UiModel.*
-import com.toms.applications.marveltomasvazquez.util.Event
-import com.toms.applications.marveltomasvazquez.utils.MockEditable
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.ObsoleteCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
-import org.junit.After
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
-import kotlin.test.assertEquals
 import kotlin.time.ExperimentalTime
 
 @ExperimentalTime
 @ObsoleteCoroutinesApi
 @ExperimentalCoroutinesApi
 class SearchFragmentTest {
-
+/*
     private lateinit var searchViewModel: SearchViewModel
     private val fakeRemoteRepository = FakeRemoteRepository()
     private val searchRepository = SearchRepository(fakeRemoteRepository)
@@ -78,5 +56,5 @@ class SearchFragmentTest {
             cancelAndConsumeRemainingEvents()
         }
 
-    }
+    }*/
 }

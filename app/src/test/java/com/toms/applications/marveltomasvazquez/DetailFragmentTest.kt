@@ -1,33 +1,14 @@
 package com.toms.applications.marveltomasvazquez
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import app.cash.turbine.test
-import com.applications.toms.data.repository.FavoriteRepository
-import com.applications.toms.testshared.listOfMocks
-import com.applications.toms.testshared.mockCharacter
-import com.applications.toms.usecases.favorites.GetFavorites
-import com.applications.toms.usecases.favorites.RemoveFromFavorites
-import com.applications.toms.usecases.favorites.SaveToFavorites
-import com.toms.applications.marveltomasvazquez.repositories.FakeLocalRepository
-import com.toms.applications.marveltomasvazquez.rules.CoroutineTestRule
-import com.toms.applications.marveltomasvazquez.ui.screen.detail.DetailViewModel
-import com.toms.applications.marveltomasvazquez.ui.screen.detail.DetailViewModel.UiModel.*
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.ObsoleteCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
-import org.junit.After
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
-import kotlin.test.assertEquals
 import kotlin.time.ExperimentalTime
 
 @ExperimentalTime
 @ObsoleteCoroutinesApi
 @ExperimentalCoroutinesApi
 class DetailFragmentTest {
-
+/*
     private lateinit var detailViewModel: DetailViewModel
     private val fakeLocalRepository = FakeLocalRepository()
     private val favoriteRepository = FavoriteRepository(fakeLocalRepository)
@@ -71,5 +52,5 @@ class DetailFragmentTest {
             assertEquals(Favorite,awaitItem())
             cancelAndIgnoreRemainingEvents()
         }
-    }
+    }*/
 }

@@ -21,19 +21,18 @@ class CharactersRepository(
             fetchCharacters(offset)
                 .onSuccess {
                     localDataSource.saveCharacter(it.distinct())
-                        .onSuccess {
-                            localDataSource.getCharacters()
-                                .onSuccess { success -> eitherSuccess(success) }
-                                .onFailure { fail -> eitherFailure(fail) }
-                        }
+                        .onSuccess { getLocalCharacters() }
                         .onFailure { fail -> eitherFailure(fail) }
                 }
                 .onFailure { eitherFailure(it) }
         } else {
-            localDataSource.getCharacters()
-                .onSuccess { success -> eitherSuccess(success) }
-                .onFailure { fail -> eitherFailure(fail) }
+            getLocalCharacters()
         }
+
+    private suspend fun getLocalCharacters(): Either<List<MyCharacter>, ErrorStates> =
+        localDataSource.getCharacters()
+            .onSuccess { success -> eitherSuccess(success) }
+            .onFailure { fail -> eitherFailure(fail) }
 
 
     suspend fun fetchCharacters(offset: Int): Either<List<MyCharacter>, ErrorStates> =
