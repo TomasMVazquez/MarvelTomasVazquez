@@ -11,6 +11,7 @@ import com.applications.toms.usecases.characters.GetAllCharacters
 import com.applications.toms.usecases.favorites.GetFavorites
 import com.applications.toms.usecases.favorites.RemoveFromFavorites
 import com.applications.toms.usecases.favorites.SaveToFavorites
+import com.applications.toms.usecases.search.SearchUseCase
 import com.toms.applications.marveltomasvazquez.data.database.CharacterDatabase
 import com.toms.applications.marveltomasvazquez.data.database.RoomDataSource
 import com.toms.applications.marveltomasvazquez.data.server.ServerDataSource
@@ -75,5 +76,6 @@ private val scopesModule = module {
 
     scope(named<SearchFragment>()) {
         viewModel { SearchViewModel(get()) }
+        scoped { SearchUseCase(get()) }
     }
 }

@@ -7,12 +7,13 @@ import com.applications.toms.data.onFailure
 import com.applications.toms.data.onSuccess
 import com.applications.toms.data.repository.SearchRepository
 import com.applications.toms.domain.MyCharacter
+import com.applications.toms.usecases.search.SearchUseCase
 import com.toms.applications.marveltomasvazquez.ui.customviews.InfoState
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class SearchViewModel(
-    private val searchRepository: SearchRepository
+    private val searchUseCase: SearchUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(State())
@@ -27,7 +28,7 @@ class SearchViewModel(
         )
 
         viewModelScope.launch {
-            searchRepository.getCharacters(value.toString())
+            searchUseCase.execute(value.toString())
                 .onSuccess {
                     if (it.isEmpty())
                         _state.value = state.value.copy(
