@@ -6,14 +6,13 @@ import com.applications.toms.data.onFailure
 import com.applications.toms.data.onSuccess
 import com.applications.toms.data.repository.CharactersRepository
 import com.applications.toms.domain.MyCharacter
-import com.applications.toms.usecases.characters.GetAllCharacters
+import com.applications.toms.usecases.characters.GetAllCharactersUseCase
 import com.toms.applications.marveltomasvazquez.ui.customviews.InfoState
-import com.toms.applications.marveltomasvazquez.util.*
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
-    private val getAllCharacters: GetAllCharacters
+    private val getAllCharactersUseCase: GetAllCharactersUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(State())
@@ -48,7 +47,7 @@ class HomeViewModel(
 
     private fun getCharacterFromUseCase(size: Int) {
         viewModelScope.launch {
-            getAllCharacters.execute(GetAllCharacters.OkInput(size))
+            getAllCharactersUseCase.execute(GetAllCharactersUseCase.OkInput(size))
                 .onSuccess { list ->
                     if (!list.isNullOrEmpty()) {
                         val newList = state.value.characters + list

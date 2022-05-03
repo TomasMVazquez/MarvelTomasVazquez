@@ -5,9 +5,9 @@ import com.applications.toms.data.repository.CharactersRepository
 import com.applications.toms.domain.ErrorStates
 import com.applications.toms.domain.MyCharacter
 import com.applications.toms.usecases.UseCase
-import com.applications.toms.usecases.characters.GetAllCharacters.OkInput
+import com.applications.toms.usecases.characters.GetAllCharactersUseCase.OkInput
 
-class GetAllCharacters(private val charactersRepository: CharactersRepository) :
+class GetAllCharactersUseCase(private val charactersRepository: CharactersRepository) :
     UseCase<OkInput, List<MyCharacter>>() {
 
     override suspend fun buildUseCase(input: OkInput): Either<List<MyCharacter>, ErrorStates> =

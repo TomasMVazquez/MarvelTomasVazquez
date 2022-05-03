@@ -5,7 +5,7 @@ import com.applications.toms.data.*
 import com.applications.toms.data.repository.FavoriteRepository
 import com.applications.toms.domain.ErrorStates
 import com.applications.toms.testshared.listOfMocks
-import com.applications.toms.usecases.favorites.GetFavorites
+import com.applications.toms.usecases.favorites.GetFavoritesUseCase
 import com.toms.applications.marveltomasvazquez.repositories.FakeLocalRepository
 import com.toms.applications.marveltomasvazquez.utils.MockEditable
 import kotlinx.coroutines.Dispatchers
@@ -23,7 +23,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import kotlin.test.assertEquals
 
 @RunWith(MockitoJUnitRunner::class)
-class GetFavoritesTest {
+class GetFavoritesUseCaseTest {
 
     @Mock
     private val fakeLocalRepository = FakeLocalRepository()
@@ -31,7 +31,7 @@ class GetFavoritesTest {
     @Mock
     private val repository = FavoriteRepository(fakeLocalRepository)
 
-    private val useCaseToTest by lazy { GetFavorites(repository) }
+    private val useCaseToTest by lazy { GetFavoritesUseCase(repository) }
 
     @ExperimentalCoroutinesApi
     val dispatcher = UnconfinedTestDispatcher()

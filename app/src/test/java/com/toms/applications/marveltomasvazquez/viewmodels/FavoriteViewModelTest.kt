@@ -8,7 +8,7 @@ import com.applications.toms.data.repository.FavoriteRepository
 import com.applications.toms.domain.ErrorStates
 import com.applications.toms.testshared.listOfMocks
 import com.applications.toms.testshared.mockCharacter
-import com.applications.toms.usecases.favorites.GetFavorites
+import com.applications.toms.usecases.favorites.GetFavoritesUseCase
 import com.toms.applications.marveltomasvazquez.repositories.FakeLocalRepository
 import com.toms.applications.marveltomasvazquez.ui.screen.favorite.FavoriteViewModel
 import com.toms.applications.marveltomasvazquez.utils.MockEditable
@@ -26,6 +26,9 @@ import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
 import kotlin.time.ExperimentalTime
 
 @ExperimentalCoroutinesApi
@@ -40,7 +43,7 @@ class FavoriteViewModelTest {
     private val repository = FavoriteRepository(fakeLocalRepository)
 
     @Mock
-    private val useCase = GetFavorites(repository)
+    private val useCase = GetFavoritesUseCase(repository)
 
     private val viewModel: FavoriteViewModel by lazy { FavoriteViewModel(useCase) }
 
@@ -61,8 +64,8 @@ class FavoriteViewModelTest {
     fun `init viewModel test`() {
         runBlocking {
             assert(viewModel.state.value.loading)
-            assert(viewModel.state.value.characters.isEmpty())
-            assert(viewModel.state.value.errorWatcher == null)
+            assertTrue(viewModel.state.value.characters.isEmpty())
+            assertNull(viewModel.state.value.errorWatcher)
         }
     }
 
@@ -71,7 +74,7 @@ class FavoriteViewModelTest {
         runBlocking {
             Mockito.`when`(useCase.execute(null))
                 .thenReturn(eitherSuccess(listOfMocks))
-            assert(viewModel.state.value.characters.isNotEmpty())
+            assertTrue(viewModel.state.value.characters.isNotEmpty())
             assertEquals(viewModel.state.value.characters, listOfMocks)
         }
     }
@@ -94,7 +97,7 @@ class FavoriteViewModelTest {
         runBlocking {
             Mockito.`when`(useCase.execute(null))
                 .thenReturn(eitherFailure(ErrorStates.EMPTY))
-            assert(viewModel.state.value.errorWatcher != null)
+            assertNotNull(viewModel.state.value.errorWatcher)
         }
     }
 

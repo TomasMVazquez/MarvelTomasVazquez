@@ -7,13 +7,13 @@ import com.applications.toms.data.onFailure
 import com.applications.toms.data.onSuccess
 import com.applications.toms.domain.ErrorStates
 import com.applications.toms.domain.MyCharacter
-import com.applications.toms.usecases.favorites.GetFavorites
+import com.applications.toms.usecases.favorites.GetFavoritesUseCase
 import com.toms.applications.marveltomasvazquez.ui.customviews.InfoState
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class FavoriteViewModel(
-    private val getFavorites: GetFavorites
+    private val getFavoritesUseCase: GetFavoritesUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(State())
@@ -24,7 +24,7 @@ class FavoriteViewModel(
 
     init {
         viewModelScope.launch {
-            getFavorites.execute(null)
+            getFavoritesUseCase.execute(null)
                 .onSuccess {
                     _state.value = state.value.copy(
                         loading = false,
@@ -56,7 +56,7 @@ class FavoriteViewModel(
             loading = true
         )
         viewModelScope.launch {
-            getFavorites.execute(value.toString())
+            getFavoritesUseCase.execute(value.toString())
                 .onSuccess {
                     _state.value = state.value.copy(
                         loading = false,

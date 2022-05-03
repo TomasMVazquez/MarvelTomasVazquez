@@ -17,4 +17,7 @@ class FakeRemoteRepository: RemoteDataSource {
 
     override suspend fun getCharactersByNameSearch(nameStartsWith: String): Either<List<MyCharacter>, ErrorStates>  =
         eitherSuccess(listOfMocks)
+
+    override suspend fun getCharacterDetail(characterId: String): Either<List<MyCharacter>, ErrorStates> =
+        eitherSuccess(listOfMocks.filter { it.id.toString() == characterId })
 }

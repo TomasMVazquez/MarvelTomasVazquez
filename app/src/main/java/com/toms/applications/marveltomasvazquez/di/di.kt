@@ -7,12 +7,11 @@ import com.applications.toms.data.repository.FavoriteRepository
 import com.applications.toms.data.repository.SearchRepository
 import com.applications.toms.data.source.LocalDataSource
 import com.applications.toms.data.source.RemoteDataSource
-import com.applications.toms.domain.MyCharacter
-import com.applications.toms.usecases.characters.GetAllCharacters
+import com.applications.toms.usecases.characters.GetAllCharactersUseCase
 import com.applications.toms.usecases.characters.GetCharacterDetailUseCase
-import com.applications.toms.usecases.favorites.GetFavorites
-import com.applications.toms.usecases.favorites.RemoveFromFavorites
-import com.applications.toms.usecases.favorites.SaveToFavorites
+import com.applications.toms.usecases.favorites.GetFavoritesUseCase
+import com.applications.toms.usecases.favorites.RemoveFromFavoritesUseCase
+import com.applications.toms.usecases.favorites.SaveToFavoritesUseCase
 import com.applications.toms.usecases.search.SearchUseCase
 import com.toms.applications.marveltomasvazquez.data.database.CharacterDatabase
 import com.toms.applications.marveltomasvazquez.data.database.RoomDataSource
@@ -62,12 +61,12 @@ private val dataModule = module {
 private val scopesModule = module {
     scope(named<HomeFragment>()) {
         viewModel { HomeViewModel(get()) }
-        scoped { GetAllCharacters(get()) }
+        scoped { GetAllCharactersUseCase(get()) }
     }
 
     scope(named<FavoriteFragment>()) {
         viewModel { FavoriteViewModel(get()) }
-        scoped { GetFavorites(get()) }
+        scoped { GetFavoritesUseCase(get()) }
     }
 
     scope(named<DetailFragment>()) {
@@ -81,9 +80,9 @@ private val scopesModule = module {
             )
         }
         scoped { GetCharacterDetailUseCase(get()) }
-        scoped { GetFavorites(get()) }
-        scoped { SaveToFavorites(get()) }
-        scoped { RemoveFromFavorites(get()) }
+        scoped { GetFavoritesUseCase(get()) }
+        scoped { SaveToFavoritesUseCase(get()) }
+        scoped { RemoveFromFavoritesUseCase(get()) }
     }
 
     scope(named<SearchFragment>()) {

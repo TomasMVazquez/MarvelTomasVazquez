@@ -26,6 +26,8 @@ import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
 import kotlin.test.assertEquals
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
 import kotlin.time.ExperimentalTime
 
 @ExperimentalCoroutinesApi
@@ -60,8 +62,8 @@ class SearchViewModelTest {
             val value = MockEditable("")
             viewModel.onSearchBtnClicked(value)
             assert(viewModel.state.value.loading)
-            assert(viewModel.state.value.characters.isEmpty())
-            assert(viewModel.state.value.errorWatcher == null)
+            assertTrue(viewModel.state.value.characters.isEmpty())
+            assertNull(viewModel.state.value.errorWatcher)
         }
     }
 
@@ -75,8 +77,9 @@ class SearchViewModelTest {
 
             viewModel.state.test {
                 viewModel.onSearchBtnClicked(value)
-                assert(viewModel.state.value.characters.isNotEmpty())
+                assertTrue(viewModel.state.value.characters.isNotEmpty())
                 assertEquals(expectMostRecentItem().characters, listOfMocks)
+                cancelAndConsumeRemainingEvents()
             }
         }
     }

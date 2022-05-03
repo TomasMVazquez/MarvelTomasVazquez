@@ -7,7 +7,7 @@ import com.applications.toms.domain.ErrorStates
 import com.applications.toms.domain.MyCharacter
 import com.applications.toms.usecases.UseCase
 
-class SaveToFavorites(
+class SaveToFavoritesUseCase(
     private val favoriteRepository: FavoriteRepository
 ): UseCase<MyCharacter, EitherState>() {
 

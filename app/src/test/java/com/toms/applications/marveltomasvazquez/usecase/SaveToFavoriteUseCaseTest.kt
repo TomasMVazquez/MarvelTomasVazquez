@@ -1,39 +1,38 @@
-package com.toms.applications.marveltomasvazquez.fragments
+package com.toms.applications.marveltomasvazquez.usecase
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import app.cash.turbine.test
+import com.applications.toms.data.Either
+import com.applications.toms.data.EitherState
+import com.applications.toms.data.eitherFailure
+import com.applications.toms.data.eitherSuccess
 import com.applications.toms.data.repository.FavoriteRepository
+import com.applications.toms.domain.ErrorStates
 import com.applications.toms.testshared.mockCharacter
-import com.applications.toms.usecases.favorites.GetFavoritesUseCase
+import com.applications.toms.usecases.favorites.SaveToFavoritesUseCase
 import com.toms.applications.marveltomasvazquez.repositories.FakeLocalRepository
-import com.toms.applications.marveltomasvazquez.ui.screen.favorite.FavoriteViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
+import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
-import kotlin.test.assertEquals
-import kotlin.time.ExperimentalTime
 
-@ExperimentalCoroutinesApi
-@ExperimentalTime
 @RunWith(MockitoJUnitRunner::class)
-class FavoriteFragmentTest {
+class SaveToFavoriteUseCaseTest {
 
     @Mock
     private val fakeLocalRepository = FakeLocalRepository()
+
     @Mock
     private val repository = FavoriteRepository(fakeLocalRepository)
-    @Mock
-    private val useCase = GetFavoritesUseCase(repository)
 
-    private val viewModel: FavoriteViewModel by lazy { FavoriteViewModel(useCase) }
+    private val useCaseToTest by lazy { SaveToFavoritesUseCase(repository) }
 
     @ExperimentalCoroutinesApi
     val dispatcher = UnconfinedTestDispatcher()
@@ -49,23 +48,22 @@ class FavoriteFragmentTest {
     }
 
     @Test
-    fun `navigation to detail when clicked on recycler item`() {
-        runTest {
-            val character = mockCharacter
-            viewModel.event.test {
-                viewModel.onCharacterClicked(character)
-                assertEquals(awaitItem(), FavoriteViewModel.Event.GoToDetail(character))
-                cancelAndConsumeRemainingEvents()
-            }
+    fun `get data and success`() {
+        runBlocking {
+            Mockito.`when`(repository.addToFavorites(mockCharacter))
+                .thenReturn(eitherSuccess(EitherState.SUCCESS))
+
+            assert(useCaseToTest.execute(mockCharacter) is Either.Success)
         }
     }
 
     @Test
-    fun `navigation fail`() {
-        runTest {
-            viewModel.event.test {
-                expectNoEvents()
-            }
+    fun `get data and fail`() {
+        runBlocking {
+            Mockito.`when`(repository.addToFavorites(mockCharacter))
+                .thenReturn(eitherFailure(ErrorStates.THROWABLE))
+
+            assert(useCaseToTest.execute(mockCharacter) is Either.Failure)
         }
     }
 }

@@ -7,9 +7,9 @@ import com.applications.toms.data.onSuccess
 import com.applications.toms.domain.ErrorStates
 import com.applications.toms.domain.MyCharacter
 import com.applications.toms.usecases.characters.GetCharacterDetailUseCase
-import com.applications.toms.usecases.favorites.GetFavorites
-import com.applications.toms.usecases.favorites.RemoveFromFavorites
-import com.applications.toms.usecases.favorites.SaveToFavorites
+import com.applications.toms.usecases.favorites.GetFavoritesUseCase
+import com.applications.toms.usecases.favorites.RemoveFromFavoritesUseCase
+import com.applications.toms.usecases.favorites.SaveToFavoritesUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,9 +17,9 @@ import kotlinx.coroutines.launch
 
 class DetailViewModel(
     private val getCharacterDetailUseCase: GetCharacterDetailUseCase,
-    private val getFavorites: GetFavorites,
-    private val saveToFavorites: SaveToFavorites,
-    private val removeFromFavorites: RemoveFromFavorites,
+    private val getFavoritesUseCase: GetFavoritesUseCase,
+    private val saveToFavoritesUseCase: SaveToFavoritesUseCase,
+    private val removeFromFavoritesUseCase: RemoveFromFavoritesUseCase,
     private val characterId: String
 ) : ViewModel() {
 
@@ -30,7 +30,7 @@ class DetailViewModel(
 
     fun getData() {
         viewModelScope.launch {
-            getFavorites.execute(null)
+            getFavoritesUseCase.execute(null)
                 .onSuccess {
                     getDetail(it)
                 }
@@ -65,7 +65,7 @@ class DetailViewModel(
         )
         viewModelScope.launch {
             favorite = if (favorite) {
-                removeFromFavorites.execute(character)
+                removeFromFavoritesUseCase.execute(character)
                     .onSuccess {
                         _state.value = state.value.copy(
                             loading = false,
@@ -75,7 +75,7 @@ class DetailViewModel(
                     .onFailure { /*TODO*/ }
                 false
             } else {
-                saveToFavorites.execute(character)
+                saveToFavoritesUseCase.execute(character)
                     .onSuccess {
                         _state.value = state.value.copy(
                             loading = false,
