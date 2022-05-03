@@ -7,7 +7,6 @@ import com.applications.toms.data.repository.CharactersRepository
 import com.applications.toms.domain.ErrorStates
 import com.applications.toms.testshared.listOfMocks
 import com.applications.toms.usecases.characters.GetAllCharacters
-import com.google.gson.Gson
 import com.toms.applications.marveltomasvazquez.repositories.FakeLocalRepository
 import com.toms.applications.marveltomasvazquez.repositories.FakeRemoteRepository
 import com.toms.applications.marveltomasvazquez.ui.screen.home.HomeViewModel

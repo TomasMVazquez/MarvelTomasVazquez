@@ -2,7 +2,7 @@ package com.toms.applications.marveltomasvazquez.repositories
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.applications.toms.data.*
-import com.applications.toms.data.repository.CharactersRepository
+import com.applications.toms.data.repository.SearchRepository
 import com.applications.toms.domain.ErrorStates
 import com.applications.toms.testshared.listOfMocks
 import kotlinx.coroutines.Dispatchers
@@ -20,19 +20,13 @@ import org.mockito.junit.MockitoJUnitRunner
 import kotlin.test.assertEquals
 
 @RunWith(MockitoJUnitRunner::class)
-class CharactersRepositoryTest {
+class SearchRepositoryTest {
 
     @Mock
     private val fakeRemoteRepository = FakeRemoteRepository()
 
-    @Mock
-    private val fakeLocalRepository = FakeLocalRepository()
-
     private val repositoryTest by lazy {
-        CharactersRepository(
-            fakeRemoteRepository,
-            fakeLocalRepository
-        )
+        SearchRepository(fakeRemoteRepository)
     }
 
     @ExperimentalCoroutinesApi
@@ -51,11 +45,11 @@ class CharactersRepositoryTest {
     @Test
     fun `get data and success`() {
         runBlocking {
-            Mockito.`when`(repositoryTest.fetchCharacters(0))
+            Mockito.`when`(repositoryTest.getCharacters("prueba"))
                 .thenReturn(eitherSuccess(listOfMocks))
 
-            assert(repositoryTest.getCharacters(0) is Either.Success)
-            repositoryTest.getCharacters(0).onSuccess {
+            assert(repositoryTest.getCharacters("prueba") is Either.Success)
+            repositoryTest.getCharacters("prueba").onSuccess {
                 assertEquals(it, listOfMocks)
             }
         }
@@ -64,11 +58,11 @@ class CharactersRepositoryTest {
     @Test
     fun `get data and fail`() {
         runBlocking {
-            Mockito.`when`(repositoryTest.fetchCharacters(0))
+            Mockito.`when`(repositoryTest.getCharacters("prueba"))
                 .thenReturn(eitherFailure(ErrorStates.SERVER))
 
-            assert(repositoryTest.getCharacters(0) is Either.Failure)
-            repositoryTest.getCharacters(0).onFailure {
+            assert(repositoryTest.getCharacters("prueba") is Either.Failure)
+            repositoryTest.getCharacters("prueba").onFailure {
                 assertEquals(it, ErrorStates.SERVER)
             }
         }

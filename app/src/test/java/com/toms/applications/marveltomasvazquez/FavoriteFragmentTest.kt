@@ -1,6 +1,7 @@
 package com.toms.applications.marveltomasvazquez
 
-import kotlinx.coroutines.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.ObsoleteCoroutinesApi
 import kotlin.time.ExperimentalTime
 
 @ExperimentalTime

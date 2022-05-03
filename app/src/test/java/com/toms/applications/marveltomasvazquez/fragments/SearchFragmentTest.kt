@@ -2,12 +2,11 @@ package com.toms.applications.marveltomasvazquez.fragments
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
-import com.applications.toms.data.repository.CharactersRepository
+import com.applications.toms.data.repository.SearchRepository
 import com.applications.toms.testshared.mockCharacter
-import com.applications.toms.usecases.characters.GetAllCharacters
-import com.toms.applications.marveltomasvazquez.repositories.FakeLocalRepository
+import com.applications.toms.usecases.search.SearchUseCase
 import com.toms.applications.marveltomasvazquez.repositories.FakeRemoteRepository
-import com.toms.applications.marveltomasvazquez.ui.screen.home.HomeViewModel
+import com.toms.applications.marveltomasvazquez.ui.screen.search.SearchViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -25,18 +24,16 @@ import kotlin.time.ExperimentalTime
 @ExperimentalCoroutinesApi
 @ExperimentalTime
 @RunWith(MockitoJUnitRunner::class)
-class HomeFragmentTest {
+class SearchFragmentTest {
 
     @Mock
     private val fakeRemoteRepository = FakeRemoteRepository()
     @Mock
-    private val fakeLocalRepository = FakeLocalRepository()
+    private val repository = SearchRepository(fakeRemoteRepository)
     @Mock
-    private val characterRepository = CharactersRepository(fakeRemoteRepository,fakeLocalRepository)
-    @Mock
-    private val getAllCharacters = GetAllCharacters(characterRepository)
+    private val useCase = SearchUseCase(repository)
 
-    private val viewModel: HomeViewModel by lazy { HomeViewModel(getAllCharacters) }
+    private val viewModel: SearchViewModel by lazy { SearchViewModel(useCase) }
 
     @ExperimentalCoroutinesApi
     val dispatcher = UnconfinedTestDispatcher()
@@ -57,7 +54,7 @@ class HomeFragmentTest {
             val character = mockCharacter
             viewModel.event.test {
                 viewModel.onCharacterClicked(character)
-                assertEquals(awaitItem(),HomeViewModel.Event.GoToDetail(character))
+                assertEquals(awaitItem(), SearchViewModel.Event.GoToDetail(character))
                 cancelAndConsumeRemainingEvents()
             }
         }
@@ -71,5 +68,4 @@ class HomeFragmentTest {
             }
         }
     }
-
 }

@@ -1,10 +1,12 @@
-package com.toms.applications.marveltomasvazquez.repositories
+package com.toms.applications.marveltomasvazquez.usecase
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.applications.toms.data.*
-import com.applications.toms.data.repository.CharactersRepository
+import com.applications.toms.data.repository.SearchRepository
 import com.applications.toms.domain.ErrorStates
 import com.applications.toms.testshared.listOfMocks
+import com.applications.toms.usecases.search.SearchUseCase
+import com.toms.applications.marveltomasvazquez.repositories.FakeRemoteRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
@@ -17,23 +19,16 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
-import kotlin.test.assertEquals
 
 @RunWith(MockitoJUnitRunner::class)
-class CharactersRepositoryTest {
+class SearchUseCaseTest {
 
     @Mock
     private val fakeRemoteRepository = FakeRemoteRepository()
-
     @Mock
-    private val fakeLocalRepository = FakeLocalRepository()
+    private val repository = SearchRepository(fakeRemoteRepository)
 
-    private val repositoryTest by lazy {
-        CharactersRepository(
-            fakeRemoteRepository,
-            fakeLocalRepository
-        )
-    }
+    private val useCaseToTest by lazy { SearchUseCase(repository) }
 
     @ExperimentalCoroutinesApi
     val dispatcher = UnconfinedTestDispatcher()
@@ -51,12 +46,16 @@ class CharactersRepositoryTest {
     @Test
     fun `get data and success`() {
         runBlocking {
-            Mockito.`when`(repositoryTest.fetchCharacters(0))
-                .thenReturn(eitherSuccess(listOfMocks))
 
-            assert(repositoryTest.getCharacters(0) is Either.Success)
-            repositoryTest.getCharacters(0).onSuccess {
-                assertEquals(it, listOfMocks)
+            Mockito.`when`(useCaseToTest.execute("prueba")).thenReturn(
+                eitherSuccess(
+                    listOfMocks
+                )
+            )
+
+            assert(useCaseToTest.execute("prueba") is Either.Success)
+            useCaseToTest.execute("prueba").onSuccess {
+                assert(it.isNotEmpty())
             }
         }
     }
@@ -64,12 +63,12 @@ class CharactersRepositoryTest {
     @Test
     fun `get data and fail`() {
         runBlocking {
-            Mockito.`when`(repositoryTest.fetchCharacters(0))
+            Mockito.`when`(useCaseToTest.execute("prueba"))
                 .thenReturn(eitherFailure(ErrorStates.SERVER))
 
-            assert(repositoryTest.getCharacters(0) is Either.Failure)
-            repositoryTest.getCharacters(0).onFailure {
-                assertEquals(it, ErrorStates.SERVER)
+            assert(useCaseToTest.execute("prueba") is Either.Failure)
+            useCaseToTest.execute("prueba").onFailure {
+                assert(it == ErrorStates.SERVER)
             }
         }
     }

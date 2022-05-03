@@ -10,7 +10,6 @@ import com.applications.toms.domain.MyCharacter
 import com.toms.applications.marveltomasvazquez.data.asDatabaseModel
 import com.toms.applications.marveltomasvazquez.data.asDomainModel
 import com.toms.applications.marveltomasvazquez.data.database.model.CharacterDatabaseItem
-import kotlinx.coroutines.flow.*
 
 class FakeLocalRepository(): LocalDataSource {
 

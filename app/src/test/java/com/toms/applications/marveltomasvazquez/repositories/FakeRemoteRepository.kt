@@ -6,9 +6,6 @@ import com.applications.toms.data.source.RemoteDataSource
 import com.applications.toms.domain.ErrorStates
 import com.applications.toms.domain.MyCharacter
 import com.applications.toms.testshared.listOfMocks
-import com.applications.toms.testshared.mockCharacter
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 
 class FakeRemoteRepository: RemoteDataSource {
 
