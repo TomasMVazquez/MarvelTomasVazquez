@@ -43,6 +43,12 @@ En todas estas pantallas podremos clickear en los personajes e ir a la pantalla 
 * [Glide](https://github.com/bumptech/glide)
 
 ### Test
+* Usando la libreria de Mockito
+* Unit testing de:
+  - Fragments
+  - ViewModels
+  - Use Cases
+  - Repositories
 
 ### TODOs y Mejoras
 
