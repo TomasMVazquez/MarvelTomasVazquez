@@ -71,7 +71,7 @@ class SearchFragment : ScopeFragment() {
             is SearchViewModel.Event.GoToDetail -> {
                 findNavController().navigate(
                     SearchFragmentDirections.actionSearchFragmentToDetailFragment(
-                        event.character.asDatabaseModel()
+                        event.character.id.toString()
                     )
                 )
             }

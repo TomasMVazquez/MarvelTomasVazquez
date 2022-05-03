@@ -55,7 +55,7 @@ class HomeFragment : ScopeFragment() {
             is HomeViewModel.Event.GoToDetail -> {
                 findNavController().navigate(
                     HomeFragmentDirections.actionHomeFragmentToDetailFragment(
-                        event.character.asDatabaseModel()
+                        event.character.id.toString()
                     )
                 )
             }

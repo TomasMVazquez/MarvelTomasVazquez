@@ -9,4 +9,6 @@ interface RemoteDataSource {
     suspend fun getCharacters(limit: Int, offset: Int): Either<List<MyCharacter>, ErrorStates>
 
     suspend fun getCharactersByNameSearch(nameStartsWith: String): Either<List<MyCharacter>, ErrorStates>
+
+    suspend fun getCharacterDetail(characterId: String): Either<List<MyCharacter>, ErrorStates>
 }

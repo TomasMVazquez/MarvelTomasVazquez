@@ -4,6 +4,7 @@ import com.toms.applications.marveltomasvazquez.data.server.model.CharactersCont
 import kotlinx.coroutines.Deferred
 import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface MarvelApi {
@@ -23,6 +24,14 @@ interface MarvelApi {
         @Query("nameStartsWith") nameStartsWith: String,
         @Query("orderBy") orderBy: String,
         @Query("limit") limit: Int,
+        @Query("ts") ts: String,
+        @Query("apikey") apiKey: String,
+        @Query("hash") hash: String
+    ): Deferred<Response<CharactersContainer>>
+
+    @GET("/v1/public/characters/{characterId}")
+    fun getCharacterDetailAsync(
+        @Path("characterId") characterId: String,
         @Query("ts") ts: String,
         @Query("apikey") apiKey: String,
         @Query("hash") hash: String

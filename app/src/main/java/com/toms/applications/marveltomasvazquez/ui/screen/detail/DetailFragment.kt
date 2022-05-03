@@ -9,7 +9,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.toms.applications.marveltomasvazquez.R
-import com.toms.applications.marveltomasvazquez.data.asDomainModel
 import com.toms.applications.marveltomasvazquez.databinding.FragmentDetailBinding
 import com.toms.applications.marveltomasvazquez.util.collectState
 import org.koin.androidx.scope.ScopeFragment
@@ -22,7 +21,7 @@ class DetailFragment : ScopeFragment() {
     private val args by navArgs<DetailFragmentArgs>()
 
     private val viewModel: DetailViewModel by viewModel {
-        parametersOf(args.character.asDomainModel())
+        parametersOf(args.characterId)
     }
 
     override fun onCreateView(
@@ -31,15 +30,12 @@ class DetailFragment : ScopeFragment() {
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_detail, container, false)
 
-        with(binding) {
-            detailViewModel = viewModel
-            character = args.character.asDomainModel()
-            characterDetails.setAttributions(args.character.asDomainModel())
-            with(toolbar) {
-                setNavigationIcon(R.drawable.ic_baseline_arrow_back)
-                setNavigationOnClickListener { findNavController().popBackStack() }
-            }
+        with(binding.toolbar) {
+            setNavigationIcon(R.drawable.ic_baseline_arrow_back)
+            setNavigationOnClickListener { findNavController().popBackStack() }
         }
+
+        viewModel.getData()
 
         collectState(viewModel.state, ::renderState)
 
@@ -47,21 +43,31 @@ class DetailFragment : ScopeFragment() {
     }
 
     private fun renderState(state: DetailViewModel.State) {
-        binding.loading.visibility = if (state.loading) View.VISIBLE else View.GONE
-        if (state.isFavorite)
-            binding.fabFavourite.setImageDrawable(
-                ContextCompat.getDrawable(
-                    requireContext(),
-                    R.drawable.ic_baseline_favorite_24
+        with(binding) {
+            detailViewModel = viewModel
+
+            loading.visibility = if (state.loading) View.VISIBLE else View.GONE
+
+            state.character?.let {
+                character = it
+                characterDetails.setAttributions(it)
+            }
+
+            if (state.isFavorite)
+                fabFavourite.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        requireContext(),
+                        R.drawable.ic_baseline_favorite_24
+                    )
                 )
-            )
-        else
-            binding.fabFavourite.setImageDrawable(
-                ContextCompat.getDrawable(
-                    requireContext(),
-                    R.drawable.ic_baseline_favorite_border
+            else
+                fabFavourite.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        requireContext(),
+                        R.drawable.ic_baseline_favorite_border
+                    )
                 )
-            )
+        }
     }
 
 }

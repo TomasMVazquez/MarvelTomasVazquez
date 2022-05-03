@@ -1,6 +1,7 @@
 package com.toms.applications.marveltomasvazquez.di
 
 import android.app.Application
+import com.applications.toms.data.repository.CharacterDetailRepository
 import com.applications.toms.data.repository.CharactersRepository
 import com.applications.toms.data.repository.FavoriteRepository
 import com.applications.toms.data.repository.SearchRepository
@@ -8,6 +9,7 @@ import com.applications.toms.data.source.LocalDataSource
 import com.applications.toms.data.source.RemoteDataSource
 import com.applications.toms.domain.MyCharacter
 import com.applications.toms.usecases.characters.GetAllCharacters
+import com.applications.toms.usecases.characters.GetCharacterDetailUseCase
 import com.applications.toms.usecases.favorites.GetFavorites
 import com.applications.toms.usecases.favorites.RemoveFromFavorites
 import com.applications.toms.usecases.favorites.SaveToFavorites
@@ -52,6 +54,7 @@ private val appModule = module {
 
 private val dataModule = module {
     factory { CharactersRepository(get(), get()) }
+    factory { CharacterDetailRepository(get()) }
     factory { FavoriteRepository(get()) }
     factory { SearchRepository(get()) }
 }
@@ -68,7 +71,16 @@ private val scopesModule = module {
     }
 
     scope(named<DetailFragment>()) {
-        viewModel { (character: MyCharacter) -> DetailViewModel(get(), get(), get(), character) }
+        viewModel { (characterId: String) ->
+            DetailViewModel(
+                get(),
+                get(),
+                get(),
+                get(),
+                characterId
+            )
+        }
+        scoped { GetCharacterDetailUseCase(get()) }
         scoped { GetFavorites(get()) }
         scoped { SaveToFavorites(get()) }
         scoped { RemoveFromFavorites(get()) }

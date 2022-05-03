@@ -24,14 +24,18 @@ class ServerDataSource : RemoteDataSource {
         offset: Int
     ): Either<List<MyCharacter>, ErrorStates> =
         withContext(Dispatchers.IO) {
-            val getCharacters =
-                MarvelApiService.retrofitService.getCharactersAsync(
-                    "name", limit, offset, ts.toString(), PUBLIC_KEY, hash
-                ).await()
-            if (getCharacters.isSuccessful)
-                eitherSuccess(getCharacters.body()?.asDomainModel() ?: emptyList())
-            else
-                eitherFailure(ErrorStates.SERVER)
+            try {
+                val getCharacters =
+                    MarvelApiService.retrofitService.getCharactersAsync(
+                        "name", limit, offset, ts.toString(), PUBLIC_KEY, hash
+                    ).await()
+                if (getCharacters.isSuccessful)
+                    eitherSuccess(getCharacters.body()?.asDomainModel() ?: emptyList())
+                else
+                    eitherFailure(ErrorStates.SERVER)
+            } catch (t: Throwable) {
+                eitherFailure(ErrorStates.THROWABLE)
+            }
         }
 
 
@@ -41,14 +45,40 @@ class ServerDataSource : RemoteDataSource {
     override suspend fun getCharactersByNameSearch(nameStartsWith: String):
             Either<List<MyCharacter>, ErrorStates> =
         withContext(Dispatchers.IO) {
-            val getCharacters =
-                MarvelApiService.retrofitService.getCharactersByNameSearchAsync(
-                    nameStartsWith, "name", 100, ts.toString(), PUBLIC_KEY, hash
-                ).await()
-            if (getCharacters.isSuccessful)
-                eitherSuccess(getCharacters.body()?.asDomainModel() ?: emptyList())
-            else
-                eitherFailure(ErrorStates.SERVER)
+            try {
+                val getCharacters =
+                    MarvelApiService.retrofitService.getCharactersByNameSearchAsync(
+                        nameStartsWith, "name", 100, ts.toString(), PUBLIC_KEY, hash
+                    ).await()
+                if (getCharacters.isSuccessful)
+                    eitherSuccess(getCharacters.body()?.asDomainModel() ?: emptyList())
+                else
+                    eitherFailure(ErrorStates.SERVER)
+            } catch (t: Throwable) {
+                eitherFailure(ErrorStates.THROWABLE)
+            }
+        }
+
+    /**
+     * Get detail
+     */
+    override suspend fun getCharacterDetail(characterId: String): Either<List<MyCharacter>, ErrorStates> =
+        withContext(Dispatchers.IO) {
+            try {
+                val getCharacters =
+                    MarvelApiService.retrofitService.getCharacterDetailAsync(
+                        characterId,
+                        ts.toString(),
+                        PUBLIC_KEY,
+                        hash
+                    ).await()
+                if (getCharacters.isSuccessful)
+                    eitherSuccess(getCharacters.body()?.asDomainModel() ?: emptyList())
+                else
+                    eitherFailure(ErrorStates.SERVER)
+            } catch (t: Throwable) {
+                eitherFailure(ErrorStates.THROWABLE)
+            }
         }
 
 }

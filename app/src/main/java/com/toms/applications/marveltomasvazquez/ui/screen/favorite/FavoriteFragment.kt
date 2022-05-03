@@ -58,7 +58,7 @@ class FavoriteFragment : ScopeFragment() {
             is FavoriteViewModel.Event.GoToDetail -> {
                 findNavController().navigate(
                     FavoriteFragmentDirections.actionFavoriteFragmentToDetailFragment(
-                        event.character.asDatabaseModel()
+                        event.character.id.toString()
                     )
                 )
             }

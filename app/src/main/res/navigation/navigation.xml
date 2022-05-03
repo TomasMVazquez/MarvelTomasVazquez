@@ -24,8 +24,9 @@
         android:label="fragment_detail"
         tools:layout="@layout/fragment_detail" >
         <argument
-            android:name="character"
-            app:argType="com.toms.applications.marveltomasvazquez.data.database.model.CharacterDatabaseItem" />
+            android:name="characterId"
+            app:argType="string"
+            app:nullable="true" />
     </fragment>
     <fragment
         android:id="@+id/splashFragment"
